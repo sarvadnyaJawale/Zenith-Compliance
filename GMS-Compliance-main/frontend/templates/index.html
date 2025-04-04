@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>AWS Compliance Scanner</title>
+    <script>
+        function checkScanStatus() {
+            fetch('/scan-status')
+            .then(response => response.json())
+            .then(data => {
+                if (data.running) {
+                    document.getElementById('status').innerHTML = "⏳ Scanning in progress... Please wait.";
+                    setTimeout(checkScanStatus, 5000);
+                } else if (data.s3_link) {
+                    document.getElementById('status').innerHTML = "✅ Scan completed! <br><a href='" + data.s3_link + "' target='_blank'>Download Report</a>";
+                } else {
+                    document.getElementById('status').innerHTML = "⚠️ No scan is running.";
+                }
+            });
+        }
+    </script>
+</head>
+<body onload="checkScanStatus()">
+    <h2>AWS Compliance Scanner</h2>
+    <form action="/configure-aws" method="post">
+        <label>AWS Access Key:</label>
+        <input type="text" name="aws_access_key" required><br><br>
+
+        <label>AWS Secret Key:</label>
+        <input type="password" name="aws_secret_key" required><br><br>
+
+        <label>AWS Region:</label>
+        <input type="text" name="aws_region" placeholder="us-east-1" required><br><br>
+
+        <input type="submit" value="Configure & Start Scan">
+    </form>
+
+    <h3 id="status">Checking scan status...</h3>
+</body>
+</html>
