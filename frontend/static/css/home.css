@@ -9287,6 +9287,98 @@ html {
       width: 90%;
     }
   }
+
+  /* why choose us section styling */
+  .section.why-choose-us {
+    background-color: var(--background-color--bacground-color-primary);
+    padding: var(--size--xlarge) var(--size--small);
+    text-align: center;
+  }
+  
+  .section-title {
+    color: var(--text-color--text-color-secondary);
+    font-size: var(--size--large);
+    font-weight: 700;
+    margin-bottom: var(--size--small);
+  }
+  
+  .section-subtitle {
+    color: var(--text-color--text-color-primary);
+    font-size: var(--size--small);
+    max-width: 800px;
+    margin: 0 auto var(--size--large);
+    line-height: 1.6;
+  }
+  
+  .cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: var(--size--medium);
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+  
+  .card {
+    background-color: var(--background-color--bacground-color-secondary);
+    padding: var(--size--large) var(--size--small);
+    border-radius: var(--border-radius--border-radius-primary);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    color: var(--text-color--text-color-secondary);
+    opacity: 0;
+    transform: perspective(800px) rotateX(20deg);
+  }
+  
+  .card:hover {
+    transform: translateY(-10px) scale(1.03);
+    box-shadow: 0 15px 35px rgba(255, 255, 255, 0.15);
+  }
+  
+  .card h3 {
+    margin-top: 1rem;
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: var(--text-color--text-color-secondary);
+  }
+  
+  .card p {
+    font-size: 0.95rem;
+    color: var(--text-color--text-color-primary);
+    margin-top: 0.5rem;
+    line-height: 1.5;
+  }
+  
+  .icon {
+    font-size: 2.5rem;
+    color: var(--text-color--text-color-tertiary);
+  }
+  
+  /* Flip Up Animation */
+  @keyframes flipUp {
+    0% {
+      transform: perspective(800px) rotateX(20deg);
+      opacity: 0;
+    }
+    100% {
+      transform: perspective(800px) rotateX(0);
+      opacity: 1;
+    }
+  }
+  
+  .flip-up {
+    animation: flipUp 0.6s ease-out forwards;
+  }
+  
+  .flip-up.delay-100 {
+    animation-delay: 0.1s;
+  }
+  .flip-up.delay-200 {
+    animation-delay: 0.2s;
+  }
+  .flip-up.delay-300 {
+    animation-delay: 0.3s;
+  }
+  
   
   
   
