@@ -294,7 +294,7 @@ html {
     display: contents;
   }
   
-  /* .w-webflow-badge, .w-webflow-badge > img {
+  .w-webflow-badge, .w-webflow-badge > img {
     box-sizing: unset;
     width: unset;
     height: unset;
@@ -374,7 +374,7 @@ html {
     opacity: 1 !important;
     vertical-align: middle !important;
     display: inline-block !important;
-  } */
+  }
   
   h1, h2, h3, h4, h5, h6 {
     margin-bottom: 10px;
@@ -3700,8 +3700,6 @@ html {
   }
   
   .button-group {
-    margin-top: 0 !important;
-    padding-top: 0 !important;
     grid-column-gap: 1rem;
     grid-row-gap: 1rem;
     flex-flow: wrap;
@@ -3709,10 +3707,6 @@ html {
     align-items: center;
     display: flex;
   }
-  .text-size-large {
-    margin-bottom: 0 !important;
-  }
-
   
   .text-align-right {
     text-align: right;
@@ -4938,10 +4932,11 @@ html {
   }
   
   .footer-end-box {
+    grid-template-rows: auto;
+    grid-template-columns: 1fr 1fr;
+    grid-auto-columns: 1fr;
+    justify-content: space-between;
     display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 0.1em; /* Controls space between "Zenit" and "hi" */
   }
   
   .large-border-text {
@@ -5633,7 +5628,6 @@ html {
   
   .footer-text-box {
     display: flex;
-    gap: 0.05em; /* Controls space between individual letters */
   }
   
   .about-image-section {
@@ -9186,202 +9180,3 @@ html {
       grid-column: span 1 / span 1;
     }
   }
-
-  /* Section Styling for Steps to run our application*/ 
-  .process-section {
-    padding: var(--size--xlarge) var(--size--small);
-    background-color: var(--background-color--bacground-color-primary);
-    color: var(--text-color--text-color-primary);
-  }
-  
-  .process-heading {
-    text-align: center;
-    font-size: var(--size--large);
-    font-weight: 600;
-    margin-bottom: var(--size--large);
-    color: var(--text-color--text-color-secondary);
-  }
-  
-  .process-steps {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    gap: var(--size--medium);
-  }
-  
-  .step-card {
-    position: relative;
-    background-color: var(--background-color--bacground-color-tertiary);
-    border-radius: var(--border-radius--border-radius-primary);
-    padding: var(--size--large) var(--size--medium);
-    width: calc(25% - var(--size--medium));
-    min-width: 260px;
-    overflow: hidden;
-    text-align: left;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    transition: transform 0.4s ease, box-shadow 0.4s ease, background-color 0.4s ease;
-    transform-style: preserve-3d;
-    cursor: default;
-    will-change: transform, box-shadow;
-  }
-  
-  .step-card:hover {
-    transform: translateY(-10px);
-    box-shadow: 0 20px 40px rgba(255, 255, 255, 0.1);
-    background-color: rgba(255, 255, 255, 0.025);
-  }
-  
-  .step-number {
-    position: absolute;
-    bottom: 10px;
-    left: 50%;
-    transform: translateX(-50%) translateY(0%) scale(1);
-    font-size: var(--size--xxhuge);
-    font-weight: 700;
-    color: rgba(255, 255, 255, 0.04);
-    z-index: 0;
-    transition: transform 0.5s ease, opacity 0.5s ease;
-    pointer-events: none;
-    text-align: center;
-  }
-  
-  
-  .step-card:hover .step-number {
-    transform: translateX(-50%) translateY(-40%) scale(0.6);
-    opacity: 0.08;
-  }  
-  
-  .step-content {
-    position: relative;
-    z-index: 2;
-    transition: opacity 0.4s ease;
-  }
-  
-  .step-content h3 {
-    font-size: 1.1rem;
-    font-weight: 600;
-    color: var(--text-color--text-color-secondary);
-    margin-bottom: var(--size--xsmall);
-  }
-  
-  .step-content p {
-    font-size: 0.95rem;
-    color: var(--text-color--text-color-primary);
-    line-height: 1.5;
-  }
-  
-  /* Responsive for smaller screens */
-  @media (max-width: 1024px) {
-    .step-card {
-      width: calc(50% - var(--size--medium));
-    }
-  }
-  
-  @media (max-width: 768px) {
-    .process-steps {
-      flex-direction: column;
-      align-items: center;
-    }
-  
-    .step-card {
-      width: 90%;
-    }
-  }
-
-  /* why choose us section styling */
-  .section.why-choose-us {
-    background-color: var(--background-color--bacground-color-primary);
-    padding: var(--size--xlarge) var(--size--small);
-    text-align: center;
-  }
-  
-  .section-title {
-    color: var(--text-color--text-color-secondary);
-    font-size: var(--size--large);
-    font-weight: 700;
-    margin-bottom: var(--size--small);
-  }
-  
-  .section-subtitle {
-    color: var(--text-color--text-color-primary);
-    font-size: var(--size--small);
-    max-width: 800px;
-    margin: 0 auto var(--size--large);
-    line-height: 1.6;
-  }
-  
-  .cards-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-    gap: var(--size--medium);
-    max-width: 1100px;
-    margin: 0 auto;
-  }
-  
-  .card {
-    background-color: var(--background-color--bacground-color-secondary);
-    padding: var(--size--large) var(--size--small);
-    border-radius: var(--border-radius--border-radius-primary);
-    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    color: var(--text-color--text-color-secondary);
-    opacity: 0;
-    transform: perspective(800px) rotateX(20deg);
-  }
-  
-  .card:hover {
-    transform: translateY(-10px) scale(1.03);
-    box-shadow: 0 15px 35px rgba(255, 255, 255, 0.15);
-  }
-  
-  .card h3 {
-    margin-top: 1rem;
-    font-size: 1.3rem;
-    font-weight: 600;
-    color: var(--text-color--text-color-secondary);
-  }
-  
-  .card p {
-    font-size: 0.95rem;
-    color: var(--text-color--text-color-primary);
-    margin-top: 0.5rem;
-    line-height: 1.5;
-  }
-  
-  .icon {
-    font-size: 2.5rem;
-    color: var(--text-color--text-color-tertiary);
-  }
-  
-  /* Flip Up Animation */
-  @keyframes flipUp {
-    0% {
-      transform: perspective(800px) rotateX(20deg);
-      opacity: 0;
-    }
-    100% {
-      transform: perspective(800px) rotateX(0);
-      opacity: 1;
-    }
-  }
-  
-  .flip-up {
-    animation: flipUp 0.6s ease-out forwards;
-  }
-  
-  .flip-up.delay-100 {
-    animation-delay: 0.1s;
-  }
-  .flip-up.delay-200 {
-    animation-delay: 0.2s;
-  }
-  .flip-up.delay-300 {
-    animation-delay: 0.3s;
-  }
-  
-  
-  
-  
-
-
-  
