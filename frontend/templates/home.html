@@ -69,7 +69,7 @@
       rel="preconnect"
       crossorigin="anonymous"
     />
-    <script src="{{ url_for('static', filename='js/home.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/home/home.js') }}"></script>
     <link
       rel="stylesheet"
       href="https://fonts.googleapis.com/css?family=Poppins:100,200,300,regular,500,600,700,800,900%7CDM+Sans:100,200,300,regular,500,600,700,800,900"
@@ -133,12 +133,12 @@
               /></a>
               <div class="nav-menu">
                 <a
-                  href="/home"
+                  href="{{ url_for('home') }}"
                   aria-current="page"
                   class="nav-menu-link w--current"
                   >Home</a
-                ><a href="/about" class="nav-menu-link">About us</a
-                ><a href="/pricing" class="nav-menu-link">Pricing</a>
+                ><a href="{{ url_for('about') }}" class="nav-menu-link">About us</a
+                ><a href="{{ url_for('pricing') }}" class="nav-menu-link">Pricing</a>
                 <div
                   data-hover="true"
                   data-delay="0"
@@ -194,23 +194,23 @@
                               <a href="/" class="footer-nav-link" tabindex="0"
                                 >Sales Home</a
                               ><a
-                                href="/home"
+                                href="{{ url_for('home') }}"
                                 aria-current="page"
                                 class="footer-nav-link w--current"
                                 tabindex="0"
                                 >Home</a
                               ><a
-                                href="/about"
+                                href="{{ url_for('about') }}"
                                 class="footer-nav-link"
                                 tabindex="0"
                                 >About</a
                               ><a
-                                href="/contact"
+                                href="{{ url_for('contact') }}"
                                 class="footer-nav-link"
                                 tabindex="0"
                                 >Contact</a
                               ><a
-                                href="/blog"
+                                href="{{ url_for('blog') }}"
                                 class="footer-nav-link"
                                 tabindex="0"
                                 >Blog</a
@@ -220,7 +220,7 @@
                                 tabindex="0"
                                 >Blog Single(CMS)</a
                               ><a
-                                href="/pricing"
+                                href="{{ url_for('pricing') }}"
                                 class="footer-nav-link"
                                 tabindex="0"
                                 >Pricing</a
@@ -233,7 +233,7 @@
                             </div>
                             <div class="drop-menu-nav-links-box">
                               <a
-                                href="/integrations"
+                                href="{{ url_for('integrations') }}"
                                 class="footer-nav-link"
                                 tabindex="0"
                                 >Integrations</a
@@ -243,7 +243,7 @@
                                 tabindex="0"
                                 >Integraion Single(CMS)</a
                               ><a
-                                href="/careers"
+                                href="{{ url_for('careers') }}"
                                 class="footer-nav-link"
                                 tabindex="0"
                                 >Careers</a
@@ -253,12 +253,12 @@
                                 tabindex="0"
                                 >Career Single(CMS)</a
                               ><a
-                                href="/features"
+                                href="{{ url_for('features') }}"
                                 class="footer-nav-link"
                                 tabindex="0"
                                 >Features</a
                               ><a
-                                href="/team"
+                                href="{{ url_for('team') }}"
                                 class="footer-nav-link"
                                 tabindex="0"
                                 >Team</a
@@ -278,37 +278,37 @@
                           <div class="drop-menu-navigation-wrapper">
                             <div class="drop-menu-nav-links-box">
                               <a
-                                href="/utility-pages/sign-in.html"
+                                href="{{ url_for('sign_in') }}"
                                 class="footer-nav-link"
                                 tabindex="0"
                                 >Sign in</a
                               ><a
-                                href="/utility-pages/sign-up.html"
+                                href="{{ url_for('sign_up') }}"
                                 class="footer-nav-link"
                                 tabindex="0"
                                 >sign up</a
                               ><a
-                                href="/utility-pages/reset-password"
+                                href="{{ url_for('reset_password') }}"
                                 class="footer-nav-link"
                                 tabindex="0"
                                 >Reset Password</a
                               ><a
-                                href="/404"
+                                href="{{ url_for('custom_404') }}"
                                 class="footer-nav-link"
                                 tabindex="0"
                                 >Custom 404</a
                               ><a
-                                href="/utility-pages/terms-of-use"
+                                href="{{ url_for('terms_of_use') }}"
                                 class="footer-nav-link"
                                 tabindex="0"
                                 >Terms of use</a
                               ><a
-                                href="/utility-pages/privacy-policy"
+                                href="{{ url_for('privacy_policy') }}"
                                 class="footer-nav-link"
                                 tabindex="0"
                                 >Privacy Policy</a
                               ><a
-                                href="/template-pages/style-guide"
+                                href="{{ url_for('style_guide') }}"
                                 class="footer-nav-link"
                                 tabindex="0"
                                 >Style Guides</a
@@ -695,7 +695,7 @@
                 </div>
               </div>
               <div class="nav-button-group for-desktop">
-                <a href="/utility-pages/sign-up.html" class="nav-menu-link"
+                <a href="/utility-pages/sign-up" class="nav-menu-link"
                   >Sign up</a
                 >
                 <div
@@ -711,7 +711,7 @@
                       transform-style: preserve-3d;
                     "
                   ></div>
-                  <a href="/utility-pages/sign-in.html" class="button w-inline-block"
+                  <a href="{{ url_for('sign_in') }}" class="button w-inline-block"
                     ><div>Get Started</div></a
                   >
                 </div>
@@ -1118,12 +1118,15 @@
                     <div class="mobile-menu-body">
                       <div class="mobile-nav-menu">
                         <a
-                          href="/home"
+                          href="{{ url_for('home') }}"
                           aria-current="page"
                           class="nav-menu-link w--current"
                           >Home</a
-                        ><a href="/about" class="nav-menu-link">About us</a
-                        ><a href="/pricing" class="nav-menu-link">Pricing</a>
+                        ><a href="{{ url_for('about') }}" class="nav-menu-link"
+                          >About us</a
+                        ><a href="{{ url_for('pricing') }}" class="nav-menu-link"
+                          >Pricing</a
+                        >
                         <div
                           data-hover="false"
                           data-delay="0"
@@ -1192,23 +1195,23 @@
                                         tabindex="0"
                                         >Sales Home</a
                                       ><a
-                                        href="/home"
+                                        href="{{ url_for('home') }}"
                                         aria-current="page"
                                         class="footer-nav-link w--current"
                                         tabindex="0"
                                         >Home</a
                                       ><a
-                                        href="/about"
+                                        href="{{ url_for('about') }}"
                                         class="footer-nav-link"
                                         tabindex="0"
                                         >About</a
                                       ><a
-                                        href="/contact"
+                                        href="{{ url_for('contact') }}"
                                         class="footer-nav-link"
                                         tabindex="0"
                                         >Contact</a
                                       ><a
-                                        href="/blog"
+                                        href="{{ url_for('blog') }}"
                                         class="footer-nav-link"
                                         tabindex="0"
                                         >Blog</a
@@ -1218,7 +1221,7 @@
                                         tabindex="0"
                                         >Blog Single(CMS)</a
                                       ><a
-                                        href="/pricing"
+                                        href="{{ url_for('pricing') }}"
                                         class="footer-nav-link"
                                         tabindex="0"
                                         >Pricing</a
@@ -1231,7 +1234,7 @@
                                     </div>
                                     <div class="drop-menu-nav-links-box">
                                       <a
-                                        href="/integrations"
+                                        href="{{ url_for('integrations') }}"
                                         class="footer-nav-link"
                                         tabindex="0"
                                         >Integrations</a
@@ -1241,7 +1244,7 @@
                                         tabindex="0"
                                         >Integraion Single(CMS)</a
                                       ><a
-                                        href="/careers"
+                                        href="{{ url_for('careers') }}"
                                         class="footer-nav-link"
                                         tabindex="0"
                                         >Careers</a
@@ -1251,12 +1254,12 @@
                                         tabindex="0"
                                         >Career Single(CMS)</a
                                       ><a
-                                        href="/features"
+                                        href="{{ url_for('features') }}"
                                         class="footer-nav-link"
                                         tabindex="0"
                                         >Features</a
                                       ><a
-                                        href="/team"
+                                        href="{{ url_for('team') }}"
                                         class="footer-nav-link"
                                         tabindex="0"
                                         >Team</a
@@ -1278,47 +1281,47 @@
                                   <div class="drop-menu-navigation-wrapper">
                                     <div class="drop-menu-nav-links-box">
                                       <a
-                                        href="/utility-pages/sign-in.html"
+                                        href="{{ url_for('sign_in') }}"
                                         class="footer-nav-link"
                                         tabindex="0"
                                         >Sign in</a
                                       ><a
-                                        href="/utility-pages/sign-up.html"
+                                        href="{{ url_for('sign_up') }}"
                                         class="footer-nav-link"
                                         tabindex="0"
                                         >sign up</a
                                       ><a
-                                        href="/utility-pages/reset-password"
+                                        href="{{ url_for('reset_password') }}"
                                         class="footer-nav-link"
                                         tabindex="0"
                                         >Reset Password</a
                                       ><a
-                                        href="/404"
+                                        href="{{ url_for('custom_404') }}"
                                         class="footer-nav-link"
                                         tabindex="0"
                                         >Custom 404</a
                                       ><a
-                                        href="/utility-pages/terms-of-use"
+                                        href="{{ url_for('terms_of_use') }}"
                                         class="footer-nav-link"
                                         tabindex="0"
                                         >Terms of use</a
                                       ><a
-                                        href="/utility-pages/privacy-policy"
+                                        href="{{ url_for('privacy_policy') }}"
                                         class="footer-nav-link"
                                         tabindex="0"
                                         >Privacy Policy</a
                                       ><a
-                                        href="/template-pages/style-guide"
+                                        href="{{ url_for('style_guide') }}"
                                         class="footer-nav-link"
                                         tabindex="0"
                                         >Style Guides</a
                                       ><a
-                                        href="/template-pages/licenses"
+                                        href="{{ url_for('licenses') }}"
                                         class="footer-nav-link"
                                         tabindex="0"
                                         >Licenses</a
                                       ><a
-                                        href="/template-pages/change-log"
+                                        href="{{ url_for('change_log') }}"
                                         class="footer-nav-link"
                                         tabindex="0"
                                         >Change log</a
@@ -1330,7 +1333,7 @@
                             </div>
                           </nav>
                         </div>
-                        <a href="/utility-pages/sign-up.html" class="nav-menu-link"
+                        <a href="{{ url_for('sign_up') }}" class="nav-menu-link"
                           >Sign up</a
                         >
                         <div class="button-group">
@@ -1348,7 +1351,7 @@
                               "
                             ></div>
                             <a
-                              href="/utility-pages/sign-in.html"
+                              href="{{ url_for('sign_in') }}"
                               class="button w-inline-block"
                               ><div>Get Started</div></a
                             >
@@ -1671,7 +1674,7 @@
                           "
                         ></div>
                         <a
-                          href="/utility-pages/sign-in.html"
+                          href="{{ url_for('sign_in') }}"
                           class="button w-inline-block"
                           ><div>Get Started</div></a
                         >
@@ -8328,18 +8331,22 @@
                     <div class="footer-nav-links-box">
                       <a href="/" class="footer-nav-link">Sales Home</a
                       ><a
-                        href="/home"
+                        href="{{ url_for('home') }}"
                         aria-current="page"
                         class="footer-nav-link w--current"
                         >Home</a
-                      ><a href="/about" class="footer-nav-link">About</a
-                      ><a href="/contact" class="footer-nav-link">Contact</a
-                      ><a href="/blog" class="footer-nav-link">Blog</a
+                      ><a href="{{ url_for('about') }}" class="footer-nav-link"
+                        >About</a
+                      ><a href="{{ url_for('contact') }}" class="footer-nav-link"
+                        >Contact</a
+                      ><a href="{{ url_for('blog') }}" class="footer-nav-link"
+                        >Blog</a
                       ><a
                         href="https://prime-line-template.webflow.io/blog/the-benefits-of-working-with-a-financial-advisor"
                         class="footer-nav-link"
                         >Blog Single(CMS)</a
-                      ><a href="/pricing" class="footer-nav-link">Pricing</a
+                      ><a href="{{ url_for('pricing') }}" class="footer-nav-link"
+                        >Pricing</a
                       ><a
                         href="https://prime-line-template.webflow.io/product/basic"
                         class="footer-nav-link"
@@ -8373,31 +8380,32 @@
                     Utility Pages
                   </div>
                   <div class="footer-nav-links-box">
-                    <a href="/utility-pages/sign-in.html" class="footer-nav-link"
+                    <a href="{{ url_for('sign_in') }}" class="footer-nav-link"
                       >Sign in</a
-                    ><a href="/utility-pages/sign-up.html" class="footer-nav-link"
+                    ><a href="{{ url_for('sign_up') }}" class="footer-nav-link"
                       >sign up</a
                     ><a
-                      href="/utility-pages/reset-password"
+                      href="{{ url_for('reset_password') }}"
                       class="footer-nav-link"
                       >Reset Password</a
-                    ><a href="/404" class="footer-nav-link">Custom 404</a
+                    ><a href="{{ url_for('custom_404') }}" class="footer-nav-link"
+                      >Custom 404</a
                     ><a
-                      href="/utility-pages/terms-of-use"
+                      href="{{ url_for('terms_of_use') }}"
                       class="footer-nav-link"
                       >Terms of use</a
                     ><a
-                      href="/utility-pages/privacy-policy"
+                      href="{{ url_for('privacy_policy') }}"
                       class="footer-nav-link"
                       >Privacy Policy</a
                     ><a
-                      href="/template-pages/style-guide"
+                      href="{{ url_for('style_guide') }}"
                       class="footer-nav-link"
                       >Style Guides</a
-                    ><a href="/template-pages/licenses" class="footer-nav-link"
+                    ><a href="{{ url_for('licenses') }}" class="footer-nav-link"
                       >Licenses</a
                     ><a
-                      href="/template-pages/change-log"
+                      href="{{ url_for('change_log') }}"
                       class="footer-nav-link"
                       >Change log</a
                     >
@@ -8475,10 +8483,10 @@
         </div>
       </footer>
     </div>
-    <script src="{{ url_for('static', filename='js/home1.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/home2.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/home3.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/home4.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/home/home1.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/home/home2.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/home/home3.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/home/home4.js') }}"></script>
     <veepn-guard-alert
       ><style>
         @font-face {
