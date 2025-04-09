@@ -25,7 +25,7 @@ def features():
 # New pages (placeholder: home.html until real templates are built)
 @app.route('/about')
 def about():
-    return render_template('home.html')
+    return render_template('about-us.html')
 
 @app.route('/pricing')
 def pricing():
@@ -33,7 +33,7 @@ def pricing():
 
 @app.route('/contact')
 def contact():
-    return render_template('home.html')
+    return render_template('contact-us.html')
 
 @app.route('/blog')
 def blog():
@@ -80,6 +80,9 @@ def licenses():
 def change_log():
     return render_template('home.html')
 
+@app.route('/utility-pages/sign-in')
+def utility_sign_in():
+    return render_template('sign-in.html')
 
 
 if __name__ == "__main__":
