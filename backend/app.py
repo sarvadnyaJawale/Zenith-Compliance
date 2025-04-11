@@ -31,6 +31,10 @@ def about():
 def pricing():
     return render_template('home.html')
 
+@app.route('/dashboard')
+def dashboard():
+    return render_template('dashboard.html')
+
 @app.route('/contact')
 def contact():
     return render_template('contact-us.html')
