@@ -19,13 +19,13 @@
     :class="{'dark bg-gray-900': darkMode === true}"
   >
     <!-- ===== Preloader Start ===== -->
-    <include src="./partials/preloader.html"></include>
+    {% include 'partials/preloader.html' %}
     <!-- ===== Preloader End ===== -->
 
     <!-- ===== Page Wrapper Start ===== -->
     <div class="flex h-screen overflow-hidden">
       <!-- ===== Sidebar Start ===== -->
-      <include src="./partials/sidebar.html"></include>
+      {% include 'partials/sidebar.html' %}
       <!-- ===== Sidebar End ===== -->
 
       <!-- ===== Content Area Start ===== -->
@@ -33,11 +33,11 @@
         class="relative flex flex-col flex-1 overflow-x-hidden overflow-y-auto"
       >
         <!-- Small Device Overlay Start -->
-        <include src="./partials/overlay.html" />
+        {% include 'partials/overlay.html' %}
         <!-- Small Device Overlay End -->
 
         <!-- ===== Header Start ===== -->
-        <include src="./partials/header.html" />
+        {% include 'partials/header.html' %}
         <!-- ===== Header End ===== -->
 
         <!-- ===== Main Content Start ===== -->
@@ -45,7 +45,7 @@
           <div class="p-4 mx-auto max-w-(--breakpoint-2xl) md:p-6">
             <!-- Breadcrumb Start -->
             <div x-data="{ pageName: `Basic Tables`}">
-              <include src="./partials/breadcrumb.html" />
+              {% include 'partials/breadcrumb.html' %}
             </div>
             <!-- Breadcrumb End -->
 
@@ -64,7 +64,7 @@
                   class="p-5 border-t border-gray-100 dark:border-gray-800 sm:p-6"
                 >
                   <!-- ====== Table Six Start -->
-                  <include src="./partials/table/table-06.html" />
+                  {% include 'partials/table/table-06.html' %}
                   <!-- ====== Table Six End -->
                 </div>
               </div>

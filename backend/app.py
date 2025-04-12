@@ -10,6 +10,82 @@ def landing():
 def home():
     return render_template('home.html')
 
+@app.route('/profile')
+def profile():
+    return render_template('Dashboard/profile.html')
+
+@app.route("/")
+def index():
+    return render_template("Dashboard/index.html")
+
+@app.route("/404")
+def error_404():
+    return render_template("Dashboard/404.html")
+
+@app.route("/alerts")
+def alerts():
+    return render_template("Dashboard/alerts.html")
+
+@app.route("/avatars")
+def avatars():
+    return render_template("Dashboard/avatars.html")
+
+@app.route("/badge")
+def badge():
+    return render_template("Dashboard/badge.html")
+
+@app.route("/bar-chart")
+def bar_chart():
+    return render_template("Dashboard/bar-chart.html")
+
+@app.route("/basic-tables")
+def basic_tables():
+    return render_template("Dashboard/basic-tables.html")
+
+@app.route("/blank")
+def blank():
+    return render_template("Dashboard/blank.html")
+
+@app.route("/buttons")
+def buttons():
+    return render_template("Dashboard/buttons.html")
+
+@app.route("/calendar")
+def calendar():
+    return render_template("Dashboard/calendar.html")
+
+@app.route("/form-elements")
+def form_elements():
+    return render_template("Dashboard/form-elements.html")
+
+@app.route("/images")
+def images():
+    return render_template("Dashboard/images.html")
+
+@app.route("/line-chart")
+def line_chart():
+    return render_template("Dashboard/line-chart.html")
+
+@app.route("/profile")
+def profile():
+    return render_template("Dashboard/profile.html")
+
+@app.route("/sidebar")
+def sidebar():
+    return render_template("Dashboard/sidebar.html")
+
+@app.route("/signin")
+def signin():
+    return render_template("Dashboard/signin.html")
+
+@app.route("/signup")
+def signup():
+    return render_template("Dashboard/signup.html")
+
+@app.route("/videos")
+def videos():
+    return render_template("Dashboard/videos.html")
+
 @app.route('/sign-in')
 def sign_in():
     return render_template('sign-in.html')
@@ -26,6 +102,10 @@ def features():
 @app.route('/about')
 def about():
     return render_template('about-us.html')
+
+@app.route('/cloud_accounts')
+def cloud_accounts():
+    return render_template('Dashboard/cloud-accounts.html')
 
 @app.route('/pricing')
 def pricing():

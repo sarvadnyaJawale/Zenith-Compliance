@@ -17,13 +17,13 @@
     :class="{'dark bg-gray-900': darkMode === true}"
   >
     <!-- ===== Preloader Start ===== -->
-    <include src="./partials/preloader.html"></include>
+    {% include 'partials/preloader.html' %}
     <!-- ===== Preloader End ===== -->
 
     <!-- ===== Page Wrapper Start ===== -->
     <div class="flex h-screen overflow-hidden">
       <!-- ===== Sidebar Start ===== -->
-      <include src="./partials/sidebar.html"></include>
+        {% include 'partials/sidebar.html' %}
       <!-- ===== Sidebar End ===== -->
 
       <!-- ===== Content Area Start ===== -->
@@ -31,11 +31,11 @@
         class="relative flex flex-col flex-1 overflow-x-hidden overflow-y-auto"
       >
         <!-- Small Device Overlay Start -->
-        <include src="./partials/overlay.html" />
+        {% include 'partials/overlay.html' %}
         <!-- Small Device Overlay End -->
 
         <!-- ===== Header Start ===== -->
-        <include src="./partials/header.html" />
+        {% include 'partials/header.html' %}
         <!-- ===== Header End ===== -->
 
         <!-- ===== Main Content Start ===== -->
@@ -43,7 +43,7 @@
           <div class="p-4 mx-auto max-w-(--breakpoint-2xl) md:p-6">
             <!-- Breadcrumb Start -->
             <div x-data="{ pageName: `Profile`}">
-              <include src="./partials/breadcrumb.html" />
+              {% include 'partials/breadcrumb.html' %}
             </div>
             <!-- Breadcrumb End -->
 
@@ -68,7 +68,7 @@
                     <div
                       class="w-20 h-20 overflow-hidden border border-gray-200 rounded-full dark:border-gray-800"
                     >
-                      <img src="./images/user/owner.jpg" alt="user" />
+                    <img src="{{ url_for('static', filename='images/user/owner.jpg') }}" alt="user" />
                     </div>
                     <div class="order-3 xl:order-2">
                       <h4
@@ -400,8 +400,8 @@
     <!-- ===== Page Wrapper End ===== -->
 
     <!-- BEGIN MODAL -->
-    <include src="./partials/profile/profile-info-modal.html" />
-    <include src="./partials/profile/profile-address-modal.html" />
+    {% include 'partials/profile/profile-info-modal.html' %}
+    {% include 'partials/profile/profile-address-modal.html' %}
     <!-- END MODAL -->
   </body>
 </html>
