@@ -6,10 +6,16 @@
       name="viewport"
       content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
     />
+        <!-- Add Tailwind CSS -->
+
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <title>
       eCommerce Dashboard | TailAdmin - Tailwind CSS Admin Dashboard Template
     </title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}" />
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
   </head>
   <body
     x-data="{ page: 'ecommerce', 'loaded': true, 'darkMode': false, 'stickyMenu': false, 'sidebarToggle': false, 'scrollTop': false }"

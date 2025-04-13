@@ -66,10 +66,6 @@ def images():
 def line_chart():
     return render_template("Dashboard/line-chart.html")
 
-@app.route("/profile")
-def profile():
-    return render_template("Dashboard/profile.html")
-
 @app.route("/sidebar")
 def sidebar():
     return render_template("Dashboard/sidebar.html")
@@ -113,7 +109,7 @@ def pricing():
 
 @app.route('/dashboard')
 def dashboard():
-    return render_template('dashboard.html')
+    return render_template('Dashboard/index.html')
 
 @app.route('/contact')
 def contact():
@@ -167,6 +163,8 @@ def change_log():
 @app.route('/utility-pages/sign-in')
 def utility_sign_in():
     return render_template('sign-in.html')
+
+
 
 
 if __name__ == "__main__":
