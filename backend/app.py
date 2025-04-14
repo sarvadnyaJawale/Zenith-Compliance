@@ -101,7 +101,7 @@ def about():
 
 @app.route('/cloud_accounts')
 def cloud_accounts():
-    return render_template('Dashboard/cloud-accounts.html')
+    return render_template('cloud-accounts.html')
 
 @app.route('/pricing')
 def pricing():
@@ -109,7 +109,7 @@ def pricing():
 
 @app.route('/dashboard')
 def dashboard():
-    return render_template('Dashboard/index.html')
+    return render_template('dashboard.html')
 
 @app.route('/contact')
 def contact():
@@ -163,9 +163,6 @@ def change_log():
 @app.route('/utility-pages/sign-in')
 def utility_sign_in():
     return render_template('sign-in.html')
-
-
-
 
 if __name__ == "__main__":
     app.run(debug=True)
