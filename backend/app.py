@@ -101,7 +101,7 @@ def about():
 
 @app.route('/cloud_accounts')
 def cloud_accounts():
-    return render_template('cloud-accounts.html')
+    return render_template('Dashboard/cloud-accounts.html')
 
 @app.route('/pricing')
 def pricing():

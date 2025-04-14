@@ -3470,22 +3470,23 @@
 @layer theme {
   :root,
   :host {
-    --color-orange-50: #fff6ed;
-    --color-orange-400: #fd853a;
-    --color-orange-500: #fb6514;
-    --color-blue-500: oklch(62.3% 0.214 259.815);
-    --color-gray-50: #f9fafb;
-    --color-gray-100: #f2f4f7;
-    --color-gray-200: #e4e7ec;
-    --color-gray-300: #d0d5dd;
-    --color-gray-400: #98a2b3;
-    --color-gray-500: #667085;
-    --color-gray-600: #475467;
-    --color-gray-700: #344054;
-    --color-gray-800: #1d2939;
-    --color-gray-900: #101828;
-    --color-black: #101828;
-    --color-white: #fff;
+    /* Updated color palette using midnight orchid theme */
+    --color-orange-50: var(--midnight-orchid-palette--white);
+    --color-orange-400: var(--midnight-orchid-palette--royal-purple);
+    --color-orange-500: var(--midnight-orchid-palette--vivid-violet);
+    --color-blue-500: var(--midnight-orchid-palette--medium-orchid);
+    --color-gray-50: var(--midnight-orchid-palette--white);
+    --color-gray-100: #f9fafb;
+    --color-gray-200: #f0f0f0;
+    --color-gray-300: #e6e6e6;
+    --color-gray-400: #8d5bb3;
+    --color-gray-500: var(--midnight-orchid-palette--ash-gray);
+    --color-gray-600: #6c6c6c;
+    --color-gray-700: #454545;
+    --color-gray-800: var(--midnight-orchid-palette--deep-purple);
+    --color-gray-900: var(--midnight-orchid-palette--blackcurrant);
+    --color-black: var(--midnight-orchid-palette--black);
+    --color-white: var(--midnight-orchid-palette--white);
     --spacing: 0.25rem;
     --container-xs: 20rem;
     --container-md: 28rem;
@@ -3541,19 +3542,21 @@
     --text-theme-sm--line-height: 20px;
     --text-theme-xs: 12px;
     --text-theme-xs--line-height: 18px;
-    --color-brand-50: #ecf3ff;
-    --color-brand-100: #dde9ff;
-    --color-brand-200: #c2d6ff;
-    --color-brand-300: #9cb9ff;
-    --color-brand-400: #7592ff;
-    --color-brand-500: #465fff;
-    --color-brand-600: #3641f5;
-    --color-brand-800: #252dae;
-    --color-brand-950: #161950;
-    --color-blue-light-50: #f0f9ff;
-    --color-blue-light-500: #0ba5ec;
-    --color-blue-light-600: #0086c9;
-    --color-gray-dark: #1a2231;
+    /* Update brand colors to match the midnight orchid theme */
+    --color-brand-50: #f7eeff;
+    --color-brand-100: #eddcff;
+    --color-brand-200: #dbbcff;
+    --color-brand-300: #c49aff;
+    --color-brand-400: #b57aff;
+    --color-brand-500: var(--midnight-orchid-palette--medium-orchid);
+    --color-brand-600: var(--midnight-orchid-palette--royal-purple);
+    --color-brand-800: var(--midnight-orchid-palette--vivid-violet);
+    --color-brand-950: var(--midnight-orchid-palette--dark-purple);
+    /* Update status colors with purple tints */
+    --color-blue-light-50: #f3eeff;
+    --color-blue-light-500: #8a4ddb;
+    --color-blue-light-600: #7037b9;
+    --color-gray-dark: var(--midnight-orchid-palette--raisin-black);
     --color-success-50: #ecfdf3;
     --color-success-300: #6ce9a6;
     --color-success-500: #12b76a;
@@ -3573,7 +3576,7 @@
     --color-warning-600: #dc6803;
     --color-warning-700: #b54708;
     --color-theme-pink-500: #ee46bc;
-    --color-theme-purple-500: #7a5af8;
+    --color-theme-purple-500: var(--midnight-orchid-palette--medium-orchid);
     --drop-shadow-4xl: 0 35px 35px #00000040, 0 45px 65px #00000026;
     --z-index-1: 1;
     --z-index-9: 9;
@@ -3581,6 +3584,19 @@
     --z-index-9999: 9999;
     --z-index-99999: 99999;
     --z-index-999999: 999999;
+
+    /* Add the midnight orchid palette variables explicitly */
+    --midnight-orchid-palette--medium-orchid: #a037d1;
+    --midnight-orchid-palette--black: black;
+    --midnight-orchid-palette--raisin-black: #0b050f;
+    --midnight-orchid-palette--dark-purple: #1c0924;
+    --midnight-orchid-palette--blackcurrant: #1b0f23;
+    --midnight-orchid-palette--deep-purple: #201428;
+    --midnight-orchid-palette--royal-purple: #520278;
+    --midnight-orchid-palette--vivid-violet: #7400ab;
+    --midnight-orchid-palette--ash-gray: #959595;
+    --midnight-orchid-palette--lavender-mist: #e1caf0;
+    --midnight-orchid-palette--white: white;
   }
 }
 @layer base {
