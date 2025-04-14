@@ -1,6 +1,7 @@
-from flask import Flask, render_template, url_for
+from flask import Flask, render_template, request, redirect, url_for, flash
 
 app = Flask(__name__, static_folder="../frontend/static", template_folder="../frontend/templates")
+app.secret_key = 'your_secret_key_here'  # Add this line after creating the Flask app
 
 @app.route('/')
 def landing():
@@ -102,6 +103,28 @@ def about():
 @app.route('/cloud_accounts')
 def cloud_accounts():
     return render_template('Dashboard/cloud-accounts.html')
+
+@app.route('/dashboard/add-cloud-account')
+def add_cloud_account():
+    return render_template('Dashboard/add-cloud-account.html')
+
+@app.route('/dashboard/add-cloud-account', methods=['POST'])
+def add_cloud_account_submit():
+    # Get form data
+    access_key = request.form.get('access_key')
+    secret_key = request.form.get('secret_key')
+    region = request.form.get('region')
+    alias = request.form.get('alias')
+    
+    # Here you would add code to save this information to your database
+    # For example with SQLAlchemy:
+    # new_account = CloudAccount(access_key=access_key, secret_key=secret_key, region=region, alias=alias)
+    # db.session.add(new_account)
+    # db.session.commit()
+    
+    # Redirect back to the cloud accounts page with a success message
+    flash('Cloud account added successfully!', 'success')
+    return redirect(url_for('cloud_accounts'))
 
 @app.route('/pricing')
 def pricing():
