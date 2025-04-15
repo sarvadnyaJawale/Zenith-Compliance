@@ -1,7 +1,23 @@
 from flask import Flask, render_template, request, redirect, url_for, flash
+from flask_login import LoginManager, login_required, UserMixin
 
 app = Flask(__name__, static_folder="../frontend/static", template_folder="../frontend/templates")
-app.secret_key = 'your_secret_key_here'  # Add this line after creating the Flask app
+app.secret_key = 'your_secret_key_here'
+
+# Initialize Flask-Login
+login_manager = LoginManager()
+login_manager.init_app(app)
+login_manager.login_view = 'signin'  # Specify the login route
+
+# Create a simple User class for Flask-Login
+class User(UserMixin):
+    def __init__(self, id):
+        self.id = id
+
+# User loader function for Flask-Login
+@login_manager.user_loader
+def load_user(user_id):
+    return User(user_id)
 
 @app.route('/')
 def landing():
@@ -54,6 +70,10 @@ def buttons():
 @app.route("/calendar")
 def calendar():
     return render_template("Dashboard/calendar.html")
+
+@app.route('/dashboard/run-scan')
+def run_scan():
+    return render_template('Dashboard/run-scan.html')
 
 @app.route("/form-elements")
 def form_elements():

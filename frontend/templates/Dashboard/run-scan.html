@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Run Compliance Scan - Zenith Compliance</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+  <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+</head>
+<body class="bg-gray-50 dark:bg-gray-900" 
+  x-data="{ 
+    step: 1, 
+    scanInProgress: false,
+    progress: 0,
+    progressInterval: null,
+    page: 'profile',
+    'loaded': true, 
+    'darkMode': false, 
+    'stickyMenu': false, 
+    'sidebarToggle': false, 
+    'scrollTop': false,
+    selected: 'Profile',
+    startScan() {
+      this.scanInProgress = true;
+      this.progress = 0;
+      this.progressInterval = setInterval(() => {
+        if (this.progress < 100) {
+          this.progress += 1;
+        } else {
+          clearInterval(this.progressInterval);
+          setTimeout(() => {
+            this.scanInProgress = false;
+            this.step = 4;
+          }, 500);
+        }
+      }, 50);
+    }
+  }"
+  x-init="
+    darkMode = JSON.parse(localStorage.getItem('darkMode'));
+    $watch('darkMode', value => localStorage.setItem('darkMode', JSON.stringify(value)))"
+  :class="{'dark bg-gray-900': darkMode === true}"
+>
+  <!-- ===== Preloader Start ===== -->
+  <div
+    x-show="loaded"
+    x-init="window.addEventListener('DOMContentLoaded', () => {setTimeout(() => loaded = false, 500)})"
+    class="fixed left-0 top-0 z-999999 flex h-screen w-screen items-center justify-center bg-white dark:bg-black"
+  >
+    <div
+      class="h-16 w-16 animate-spin rounded-full border-4 border-solid border-brand-500 border-t-transparent"
+    ></div>
+  </div>
+  <!-- ===== Preloader End ===== -->
+
+  <!-- ===== Page Wrapper Start ===== -->
+  <div class="flex h-screen overflow-hidden">
+    <!-- ===== Sidebar Start ===== -->
+    <aside
+      :class="sidebarToggle ? 'translate-x-0 lg:w-[90px]' : '-translate-x-full'"
+      class="sidebar fixed top-0 left-0 z-9999 flex h-screen w-[290px] flex-col overflow-y-auto border-r border-gray-200 bg-white px-5 transition-all duration-300 lg:static lg:translate-x-0 dark:border-gray-800 dark:bg-black"
+      @click.outside="sidebarToggle = false"
+    >
+      <!-- SIDEBAR HEADER -->
+      <div
+        :class="sidebarToggle ? 'justify-center' : 'justify-between'"
+        class="sidebar-header flex items-center gap-2 pt-8 pb-7"
+      >
+        <a href="{{ url_for('dashboard') }}">
+          <span class="logo" :class="sidebarToggle ? 'hidden' : ''">
+            <img
+              class="dark:hidden"
+              src="{{ url_for('static', filename='images/logo/logo.svg') }}"
+              alt="Logo"
+            />
+            <img
+              class="hidden dark:block"
+              src="{{ url_for('static', filename='images/logo/logo-dark.svg') }}"
+              alt="Logo"
+            />
+          </span>
+
+          <img
+            class="logo-icon"
+            :class="sidebarToggle ? 'lg:block' : 'hidden'"
+            src="{{ url_for('static', filename='images/logo/logo-icon.svg') }}"
+            alt="Logo"
+          />
+        </a>
+      </div>
+      <!-- SIDEBAR HEADER -->
+
+      <div
+        class="no-scrollbar flex flex-col overflow-y-auto duration-300 ease-linear"
+      >
+        <!-- Sidebar Menu -->
+        <nav>
+          <!-- Menu Group -->
+          <div>
+            <h3 class="mb-4 text-xs leading-[20px] text-gray-400 uppercase">
+              <span
+                class="menu-group-title"
+                :class="sidebarToggle ? 'lg:hidden' : ''"
+              >
+                MENU
+              </span>
+
+              <svg
+                :class="sidebarToggle ? 'lg:block hidden' : 'hidden'"
+                class="menu-group-icon mx-auto fill-current"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  fill-rule="evenodd"
+                  clip-rule="evenodd"
+                  d="M5.99915 10.2451C6.96564 10.2451 7.74915 11.0286 7.74915 11.9951V12.0051C7.74915 12.9716 6.96564 13.7551 5.99915 13.7551C5.03265 13.7551 4.24915 12.9716 4.24915 12.0051V11.9951C4.24915 11.0286 5.03265 10.2451 5.99915 10.2451ZM17.9991 10.2451C18.9656 10.2451 19.7491 11.0286 19.7491 11.9951V12.0051C19.7491 12.9716 18.9656 13.7551 17.9991 13.7551C17.0326 13.7551 16.2491 12.9716 16.2491 12.0051V11.9951C16.2491 11.0286 17.0326 10.2451 17.9991 10.2451ZM13.7491 11.9951C13.7491 11.0286 12.9656 10.2451 11.9991 10.2451C11.0326 10.2451 10.2491 11.0286 10.2491 11.9951V12.0051C10.2491 12.9716 11.0326 13.7551 11.9991 13.7551C12.9656 13.7551 13.7491 12.9716 13.7491 12.0051V11.9951Z"
+                  fill=""
+                />
+              </svg>
+            </h3>
+
+            <ul class="mb-6 flex flex-col gap-4">
+              <!-- Menu Item Dashboard -->
+              <li>
+                <a
+                  href="{{ url_for('dashboard') }}"
+                  @click="selected = (selected === 'Dashboard' ? '':'Dashboard')"
+                  class="menu-item group"
+                  :class="(selected === 'Dashboard') ? 'menu-item-active' : 'menu-item-inactive'"
+                >
+                  <svg
+                    :class="(selected === 'Dashboard') ? 'menu-item-icon-active' : 'menu-item-icon-inactive'"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      fill-rule="evenodd"
+                      clip-rule="evenodd"
+                      d="M5.5 3.25C4.25736 3.25 3.25 4.25736 3.25 5.5V8.99998C3.25 10.2426 4.25736 11.25 5.5 11.25H9C10.2426 11.25 11.25 10.2426 11.25 8.99998V5.5C11.25 4.25736 10.2426 3.25 9 3.25H5.5ZM4.75 5.5C4.75 5.08579 5.08579 4.75 5.5 4.75H9C9.41421 4.75 9.75 5.08579 9.75 5.5V8.99998C9.75 9.41419 9.41421 9.74998 9 9.74998H5.5C5.08579 9.74998 4.75 9.41419 4.75 8.99998V5.5ZM5.5 12.75C4.25736 12.75 3.25 13.7574 3.25 15V18.5C3.25 19.7426 4.25736 20.75 5.5 20.75H9C10.2426 20.75 11.25 19.7427 11.25 18.5V15C11.25 13.7574 10.2426 12.75 9 12.75H5.5ZM4.75 15C4.75 14.5858 5.08579 14.25 5.5 14.25H9C9.41421 14.25 9.75 14.5858 9.75 15V18.5C9.75 18.9142 9.41421 19.25 9 19.25H5.5C5.08579 19.25 4.75 18.9142 4.75 18.5V15ZM12.75 5.5C12.75 4.25736 13.7574 3.25 15 3.25H18.5C19.7426 3.25 20.75 4.25736 20.75 5.5V8.99998C20.75 10.2426 19.7426 11.25 18.5 11.25H15C13.7574 11.25 12.75 10.2426 12.75 8.99998V5.5ZM15 4.75C14.5858 4.75 14.25 5.08579 14.25 5.5V8.99998C14.25 9.41419 14.5858 9.74998 15 9.74998H18.5C18.9142 9.74998 19.25 9.41419 19.25 8.99998V5.5C19.25 5.08579 18.9142 4.75 18.5 4.75H15ZM15 12.75C13.7574 12.75 12.75 13.7574 12.75 15V18.5C12.75 19.7426 13.7574 20.75 15 20.75H18.5C19.7426 20.75 20.75 19.7427 20.75 18.5V15C20.75 13.7574 19.7426 12.75 18.5 12.75H15ZM14.25 15C14.25 14.5858 14.5858 14.25 15 14.25H18.5C18.9142 14.25 19.25 14.5858 19.25 15V18.5C19.25 18.9142 18.9142 19.25 18.5 19.25H15C14.5858 19.25 14.25 18.9142 14.25 18.5V15Z"
+                      fill=""
+                    />
+                  </svg>
+
+                  <span
+                    class="menu-item-text"
+                    :class="sidebarToggle ? 'lg:hidden' : ''"
+                  >
+                    Dashboard
+                  </span>
+
+                  <svg
+                    class="menu-item-arrow"
+                    :class="[(selected === 'Dashboard') ? 'menu-item-arrow-active' : 'menu-item-arrow-inactive', sidebarToggle ? 'lg:hidden' : '' ]"
+                    width="20"
+                    height="20"
+                    viewBox="0 0 20 20"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M4.79175 7.39584L10.0001 12.6042L15.2084 7.39585"
+                      stroke=""
+                      stroke-width="1.5"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </svg>
+                </a>
+              </li>
+
+              <!-- Menu Item Cloud Accounts -->
+              <li>
+                <a
+                  href="{{ url_for('cloud_accounts') }}"
+                  @click="selected = (selected === 'Calendar' ? '':'Calendar')"
+                  class="menu-item group"
+                  :class="(selected === 'Calendar') ? 'menu-item-active' : 'menu-item-inactive'"
+                >
+                  <svg
+                    :class="(selected === 'Calendar') ? 'menu-item-icon-active' : 'menu-item-icon-inactive'"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      fill-rule="evenodd"
+                      clip-rule="evenodd"
+                      d="M8 2C8.41421 2 8.75 2.33579 8.75 2.75V3.75H15.25V2.75C15.25 2.33579 15.5858 2 16 2C16.4142 2 16.75 2.33579 16.75 2.75V3.75H18.5C19.7426 3.75 20.75 4.75736 20.75 6V9V19C20.75 20.2426 19.7426 21.25 18.5 21.25H5.5C4.25736 21.25 3.25 20.2426 3.25 19V9V6C3.25 4.75736 4.25736 3.75 5.5 3.75H7.25V2.75C7.25 2.33579 7.58579 2 8 2ZM8 5.25H5.5C5.08579 5.25 4.75 5.58579 4.75 6V8.25H19.25V6C19.25 5.58579 18.9142 5.25 18.5 5.25H16H8ZM19.25 9.75H4.75V19C4.75 19.4142 5.08579 19.75 5.5 19.75H18.5C18.9142 19.75 19.25 19.4142 19.25 19V9.75Z"
+                      fill=""
+                    />
+                  </svg>
+
+                  <span
+                    class="menu-item-text"
+                    :class="sidebarToggle ? 'lg:hidden' : ''"
+                  >
+                    Cloud Accounts
+                  </span>
+                </a>
+              </li>
+
+              <!-- Menu Item Run Scan -->
+              <li>
+                <a
+                  href="{{ url_for('run_scan') }}"
+                  @click="selected = (selected === 'Profile' ? '':'Profile')"
+                  class="menu-item group"
+                  :class="(selected === 'Profile') ? 'menu-item-active' : 'menu-item-inactive'"
+                >
+                  <svg
+                    :class="(selected === 'Profile') ? 'menu-item-icon-active' : 'menu-item-icon-inactive'"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      fill-rule="evenodd"
+                      clip-rule="evenodd"
+                      d="M12 3.5C7.30558 3.5 3.5 7.30558 3.5 12C3.5 14.1526 4.3002 16.1184 5.61936 17.616C6.17279 15.3096 8.24852 13.5955 10.7246 13.5955H13.2746C15.7509 13.5955 17.8268 15.31 18.38 17.6167C19.6996 16.119 20.5 14.153 20.5 12C20.5 7.30558 16.6944 3.5 12 3.5ZM17.0246 18.8566V18.8455C17.0246 16.7744 15.3457 15.0955 13.2746 15.0955H10.7246C8.65354 15.0955 6.97461 16.7744 6.97461 18.8455V18.856C8.38223 19.8895 10.1198 20.5 12 20.5C13.8798 20.5 15.6171 19.8898 17.0246 18.8566ZM2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12ZM11.9991 7.25C10.8847 7.25 9.98126 8.15342 9.98126 9.26784C9.98126 10.3823 10.8847 11.2857 11.9991 11.2857C13.1135 11.2857 14.0169 10.3823 14.0169 9.26784C14.0169 8.15342 13.1135 7.25 11.9991 7.25ZM8.48126 9.26784C8.48126 7.32499 10.0563 5.75 11.9991 5.75C13.9419 5.75 15.5169 7.32499 15.5169 9.26784C15.5169 11.2107 13.9419 12.7857 11.9991 12.7857C10.0563 12.7857 8.48126 11.2107 8.48126 9.26784Z"
+                      fill=""
+                    />
+                  </svg>
+
+                  <span
+                    class="menu-item-text"
+                    :class="sidebarToggle ? 'lg:hidden' : ''"
+                  >
+                   Run Scan
+                  </span>
+                </a>
+              </li>
+
+              <!-- Other menu items -->
+              <!-- Add more menu items from your dashboard.html as needed -->
+            </ul>
+          </div>
+        </nav>
+      </div>
+    </aside>
+    <!-- ===== Sidebar End ===== -->
+
+    <!-- ===== Content Area Start ===== -->
+    <div class="relative flex flex-1 flex-col overflow-x-hidden overflow-y-auto">
+      <!-- Small Device Overlay Start -->
+      <div
+        :class="sidebarToggle ? 'block lg:hidden' : 'hidden'"
+        class="fixed z-9 h-screen w-full bg-gray-900/50"
+      ></div>
+      <!-- Small Device Overlay End -->
+
+      <!-- ===== Header Start ===== -->
+      <header
+        x-data="{menuToggle: false}"
+        class="sticky top-0 z-99999 flex w-full border-gray-200 bg-white dark:border-gray-800 dark:bg-gray-900 lg:border-b"
+      >
+        <div class="flex grow flex-col items-center justify-between lg:flex-row lg:px-6">
+          <div class="flex w-full items-center justify-between gap-2 border-b border-gray-200 px-3 py-3 dark:border-gray-800 sm:gap-4 lg:justify-normal lg:border-b-0 lg:px-0 lg:py-4">
+            <!-- Hamburger Toggle BTN -->
+            <button
+              :class="sidebarToggle ? 'lg:bg-transparent dark:lg:bg-transparent bg-gray-100 dark:bg-gray-800' : ''"
+              class="z-99999 flex h-10 w-10 items-center justify-center rounded-lg border-gray-200 text-gray-500 dark:border-gray-800 dark:text-gray-400 lg:h-11 lg:w-11 lg:border"
+              @click.stop="sidebarToggle = !sidebarToggle"
+            >
+              <svg
+                class="hidden fill-current lg:block"
+                width="16"
+                height="12"
+                viewBox="0 0 16 12"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  fill-rule="evenodd"
+                  clip-rule="evenodd"
+                  d="M0.583252 1C0.583252 0.585788 0.919038 0.25 1.33325 0.25H14.6666C15.0808 0.25 15.4166 0.585786 15.4166 1C15.4166 1.41421 15.0808 1.75 14.6666 1.75L1.33325 1.75C0.919038 1.75 0.583252 1.41422 0.583252 1ZM0.583252 11C0.583252 10.5858 0.919038 10.25 1.33325 10.25L14.6666 10.25C15.0808 10.25 15.4166 10.5858 15.4166 11C15.4166 11.4142 15.0808 11.75 14.6666 11.75L1.33325 11.75C0.919038 11.75 0.583252 11.4142 0.583252 11ZM1.33325 5.25C0.919038 5.25 0.583252 5.58579 0.583252 6C0.583252 6.41421 0.919038 6.75 1.33325 6.75L7.99992 6.75C8.41413 6.75 8.74992 6.41421 8.74992 6C8.74992 5.58579 8.41413 5.25 7.99992 5.25L1.33325 5.25Z"
+                  fill=""
+                />
+              </svg>
+            </button>
+            <!-- Hamburger Toggle BTN -->
+
+            <div class="flex items-center gap-2 sm:gap-4 lg:hidden">
+              <!-- Dark Mode Toggler -->
+              <button
+                class="z-10 flex h-10 w-10 items-center justify-center rounded-lg text-gray-700 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800"
+                @click="darkMode = !darkMode"
+              >
+                <svg
+                  class="hidden fill-current dark:block"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    clip-rule="evenodd"
+                    d="M12 20.25C16.5563 20.25 20.25 16.5563 20.25 12C20.25 7.44365 16.5563 3.75 12 3.75C7.44365 3.75 3.75 7.44365 3.75 12C3.75 16.5563 7.44365 20.25 12 20.25ZM12 8C12.4142 8 12.75 8.33579 12.75 8.75V11.25H15.25C15.6642 11.25 16 11.5858 16 12C16 12.4142 15.6642 12.75 15.25 12.75H12.75V15.25C12.75 15.6642 12.4142 16 12 16C11.5858 16 11.25 15.6642 11.25 15.25V12.75H8.75C8.33579 12.75 8 12.4142 8 12C8 11.5858 8.33579 11.25 8.75 11.25H11.25V8.75C11.25 8.33579 11.5858 8 12 8Z"
+                    fill=""
+                  />
+                </svg>
+                <svg
+                  class="fill-current dark:hidden"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    clip-rule="evenodd"
+                    d="M12 20.25C16.5563 20.25 20.25 16.5563 20.25 12C20.25 7.44365 16.5563 3.75 12 3.75C7.44365 3.75 3.75 7.44365 3.75 12C3.75 16.5563 7.44365 20.25 12 20.25ZM12 8C12.4142 8 12.75 8.33579 12.75 8.75V11.25H15.25C15.6642 11.25 16 11.5858 16 12C16 12.4142 15.6642 12.75 15.25 12.75H12.75V15.25C12.75 15.6642 12.4142 16 12 16C11.5858 16 11.25 15.6642 11.25 15.25V12.75H8.75C8.33579 12.75 8 12.4142 8 12C8 11.5858 8.33579 11.25 8.75 11.25H11.25V8.75C11.25 8.33579 11.5858 8 12 8Z"
+                    fill=""
+                  />
+                </svg>
+              </button>
+              <!-- Dark Mode Toggler -->
+            </div>
+
+            <div class="hidden sm:block">
+              <h2 class="text-xl font-semibold text-gray-900 dark:text-white">Run Compliance Scan</h2>
+            </div>
+          </div>
+        </div>
+      </header>
+      <!-- ===== Header End ===== -->
+
+      <!-- ===== Main Content Start ===== -->
+      <main class="p-4 md:p-6 2xl:p-10">
+        <div class="mx-auto max-w-3xl">
+          <!-- Page Title -->
+          <div class="mb-6">
+            <h2 class="text-2xl font-semibold text-gray-900 dark:text-white">Run Compliance Scan</h2>
+            <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Scan your cloud infrastructure for compliance issues and security vulnerabilities</p>
+          </div>
+
+          <!-- Scan Setup Card -->
+          <div class="rounded-lg border border-gray-200 bg-white shadow-default dark:border-gray-700 dark:bg-gray-800">
+            <div class="border-b border-gray-200 px-6 py-4 dark:border-gray-700">
+              <h3 class="font-medium text-gray-900 dark:text-white">
+                <span x-show="step === 1">Step 1: Select Environment</span>
+                <span x-show="step === 2">Step 2: Configure Scan</span>
+                <span x-show="step === 3">Step 3: Running Scan</span>
+                <span x-show="step === 4">Scan Complete</span>
+              </h3>
+            </div>
+            
+            <div class="p-6">
+              <!-- Progress Steps -->
+              <div class="mb-8">
+                <div class="flex items-center justify-between">
+                  <div class="flex flex-col items-center">
+                    <div class="flex h-8 w-8 items-center justify-center rounded-full" 
+                         :class="step >= 1 ? 'bg-brand-500 text-white' : 'bg-gray-200 dark:bg-gray-700'">1</div>
+                    <span class="mt-2 text-xs text-gray-500 dark:text-gray-400">Environment</span>
+                  </div>
+                  <div class="flex-1 h-1 mx-2" :class="step > 1 ? 'bg-brand-500' : 'bg-gray-200 dark:bg-gray-700'"></div>
+                  <div class="flex flex-col items-center">
+                    <div class="flex h-8 w-8 items-center justify-center rounded-full" 
+                         :class="step >= 2 ? 'bg-brand-500 text-white' : 'bg-gray-200 dark:bg-gray-700'">2</div>
+                    <span class="mt-2 text-xs text-gray-500 dark:text-gray-400">Configure</span>
+                  </div>
+                  <div class="flex-1 h-1 mx-2" :class="step > 2 ? 'bg-brand-500' : 'bg-gray-200 dark:bg-gray-700'"></div>
+                  <div class="flex flex-col items-center">
+                    <div class="flex h-8 w-8 items-center justify-center rounded-full" 
+                         :class="step >= 3 ? 'bg-brand-500 text-white' : 'bg-gray-200 dark:bg-gray-700'">3</div>
+                    <span class="mt-2 text-xs text-gray-500 dark:text-gray-400">Scan</span>
+                  </div>
+                  <div class="flex-1 h-1 mx-2" :class="step > 3 ? 'bg-brand-500' : 'bg-gray-200 dark:bg-gray-700'"></div>
+                  <div class="flex flex-col items-center">
+                    <div class="flex h-8 w-8 items-center justify-center rounded-full" 
+                         :class="step >= 4 ? 'bg-brand-500 text-white' : 'bg-gray-200 dark:bg-gray-700'">4</div>
+                         <span class="mt-2 text-xs text-gray-500 dark:text-gray-400">Results</span>
+                        </div>
+                      </div>
+                    </div>
+      
+                    <!-- Step 1: Environment Selection -->
+                    <div x-show="step === 1" class="space-y-6">
+                      <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">Select the cloud environment you want to scan:</p>
+                      
+                      <div class="grid grid-cols-1 gap-4">
+                        <button @click="step = 2" 
+                                class="flex items-center p-4 border border-gray-200 rounded-lg hover:border-brand-500 hover:bg-gray-50 dark:border-gray-700 dark:hover:border-brand-500 dark:bg-gray-800 dark:hover:bg-gray-700 transition-all">
+                          <div class="w-10 h-10 mr-3 flex items-center justify-center bg-brand-500/15 rounded-lg">
+                            <svg class="w-6 h-6 text-brand-500" fill="currentColor" viewBox="0 0 24 24">
+                              <path d="M18.75 11.25H15a.75.75 0 0 1-.75-.75V7.5A.75.75 0 0 1 15 6.75h3.75a.75.75 0 0 1 .75.75v3a.75.75 0 0 1-.75.75zm-10.5 0H4.5a.75.75 0 0 1-.75-.75v-3A.75.75 0 0 1 4.5 6.75h3.75a.75.75 0 0 1 .75.75v3a.75.75 0 0 1-.75.75zm0 6.75H4.5a.75.75 0 0 1-.75-.75v-3a.75.75 0 0 1 .75-.75h3.75a.75.75 0 0 1 .75.75v3a.75.75 0 0 1-.75.75zm10.5 0H15a.75.75 0 0 1-.75-.75v-3a.75.75 0 0 1 .75-.75h3.75a.75.75 0 0 1 .75.75v3a.75.75 0 0 1-.75.75z"/>
+                            </svg>
+                          </div>
+                          <div class="text-left">
+                            <h4 class="font-medium text-gray-900 dark:text-white">AWS</h4>
+                            <p class="text-xs text-gray-500 dark:text-gray-400">Amazon Web Services</p>
+                          </div>
+                        </button>
+                      </div>
+                    </div>
+      
+                    <!-- Step 2: Configure Scan -->
+                    <div x-show="step === 2" class="space-y-6">
+                      <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">Configure your compliance scan settings:</p>
+                      
+                      <div class="space-y-4">
+                        <div>
+                          <label class="mb-2.5 block font-medium text-gray-900 dark:text-white">Compliance Frameworks</label>
+                          <div class="space-y-2">
+                            <label class="flex items-center">
+                              <input type="checkbox" class="form-checkbox rounded text-brand-500 border-gray-300 focus:ring-brand-500 dark:border-gray-700 dark:bg-gray-800 dark:focus:ring-brand-500" checked>
+                              <span class="ml-2 text-sm text-gray-700 dark:text-gray-300">CIS Benchmarks</span>
+                            </label>
+                            <label class="flex items-center">
+                              <input type="checkbox" class="form-checkbox rounded text-brand-500 border-gray-300 focus:ring-brand-500 dark:border-gray-700 dark:bg-gray-800 dark:focus:ring-brand-500" checked>
+                              <span class="ml-2 text-sm text-gray-700 dark:text-gray-300">NIST 800-53</span>
+                            </label>
+                            <label class="flex items-center">
+                              <input type="checkbox" class="form-checkbox rounded text-brand-500 border-gray-300 focus:ring-brand-500 dark:border-gray-700 dark:bg-gray-800 dark:focus:ring-brand-500">
+                              <span class="ml-2 text-sm text-gray-700 dark:text-gray-300">HIPAA</span>
+                            </label>
+                            <label class="flex items-center">
+                              <input type="checkbox" class="form-checkbox rounded text-brand-500 border-gray-300 focus:ring-brand-500 dark:border-gray-700 dark:bg-gray-800 dark:focus:ring-brand-500">
+                              <span class="ml-2 text-sm text-gray-700 dark:text-gray-300">PCI DSS</span>
+                            </label>
+                            <label class="flex items-center">
+                              <input type="checkbox" class="form-checkbox rounded text-brand-500 border-gray-300 focus:ring-brand-500 dark:border-gray-700 dark:bg-gray-800 dark:focus:ring-brand-500">
+                              <span class="ml-2 text-sm text-gray-700 dark:text-gray-300">SOC 2</span>
+                            </label>
+                          </div>
+                        </div>
+                        
+                        <div>
+                          <label class="mb-2.5 block font-medium text-gray-900 dark:text-white">Scan Depth</label>
+                          <select class="w-full rounded border-gray-300 bg-transparent px-5 py-3 font-medium outline-none transition focus:border-brand-500 active:border-brand-500 disabled:cursor-default disabled:bg-whiter dark:border-gray-700 dark:bg-gray-800 dark:focus:border-brand-500">
+                            <option value="quick">Quick Scan (5-10 minutes)</option>
+                            <option value="standard" selected>Standard Scan (15-30 minutes)</option>
+                            <option value="deep">Deep Scan (30+ minutes)</option>
+                          </select>
+                        </div>
+                        
+                        <div>
+                          <label class="mb-2.5 block font-medium text-gray-900 dark:text-white">Scan Schedule</label>
+                          <select class="w-full rounded border-gray-300 bg-transparent px-5 py-3 font-medium outline-none transition focus:border-brand-500 active:border-brand-500 disabled:cursor-default disabled:bg-whiter dark:border-gray-700 dark:bg-gray-800 dark:focus:border-brand-500">
+                            <option value="once" selected>Run Once</option>
+                            <option value="daily">Daily</option>
+                            <option value="weekly">Weekly</option>
+                            <option value="monthly">Monthly</option>
+                          </select>
+                        </div>
+                      </div>
+                      
+                      <div class="flex justify-between pt-4">
+                        <button @click="step = 1" 
+                                class="inline-flex items-center justify-center rounded-md border border-brand-500 px-6 py-2.5 text-center font-medium text-brand-500 hover:bg-opacity-90 dark:text-brand-400 dark:border-brand-400 dark:hover:bg-gray-700">
+                          Back
+                        </button>
+                        <button @click="step = 3; startScan()" 
+                                class="inline-flex items-center justify-center rounded-md bg-brand-500 px-6 py-2.5 text-center font-medium text-white hover:bg-brand-600 dark:hover:bg-brand-400">
+                          Start Scan
+                        </button>
+                      </div>
+                    </div>
+      
+                    <!-- Step 3: Running Scan -->
+                    <div x-show="step === 3" class="space-y-6">
+                      <div class="text-center py-6">
+                        <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-brand-500/15 mb-4">
+                          <svg class="w-8 h-8 text-brand-500 animate-spin" fill="none" viewBox="0 0 24 24">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                          </svg>
+                        </div>
+                        <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-2">Scanning AWS Environment</h3>
+                        <p class="text-sm text-gray-500 dark:text-gray-400">This may take a few minutes. Please don't close this window.</p>
+                      </div>
+                      
+                      <div class="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
+                        <div class="bg-brand-500 h-2.5 rounded-full transition-all duration-300" :style="`width: ${progress}%`"></div>
+                      </div>
+                      
+                      <div class="flex justify-between text-sm text-gray-500 dark:text-gray-400">
+                        <span>Scanning resources...</span>
+                        <span x-text="`${progress}%`"></span>
+                      </div>
+                      
+                      <div class="mt-4 border border-gray-200 rounded-lg p-4 bg-gray-50 dark:border-gray-700 dark:bg-gray-800 max-h-40 overflow-y-auto">
+                        <div class="text-xs font-mono space-y-1 text-gray-700 dark:text-gray-300">
+                          <div>Initializing scan...</div>
+                          <div x-show="progress >= 10">Connecting to AWS API...</div>
+                          <div x-show="progress >= 20">Authentication successful</div>
+                          <div x-show="progress >= 30">Discovering resources...</div>
+                          <div x-show="progress >= 40">Analyzing EC2 instances...</div>
+                          <div x-show="progress >= 50">Checking VPC configurations...</div>
+                          <div x-show="progress >= 60">Analyzing IAM policies...</div>
+                          <div x-show="progress >= 70">Checking S3 bucket configurations...</div>
+                          <div x-show="progress >= 80">Validating KMS encryption settings...</div>
+                          <div x-show="progress >= 90">Analyzing CloudTrail and CloudWatch...</div>
+                          <div x-show="progress >= 100">Scan complete! Generating report...</div>
+                        </div>
+                      </div>
+                    </div>
+      
+                    <!-- Step 4: Scan Complete -->
+                    <div x-show="step === 4" class="space-y-6">
+                      <div class="text-center py-6">
+                        <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-success-500/15 mb-4">
+                          <svg class="w-8 h-8 text-success-500" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                          </svg>
+                        </div>
+                        <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-2">Scan Complete!</h3>
+                        <p class="text-sm text-gray-500 dark:text-gray-400">Your compliance scan has been completed successfully.</p>
+                      </div>
+                      
+                      <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
+                        <div class="p-4 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-700">
+                          <h4 class="font-medium text-gray-900 dark:text-white">Scan Summary</h4>
+                        </div>
+                        <div class="p-4">
+                          <div class="grid grid-cols-3 gap-4 text-center">
+                            <div class="p-3 rounded-lg bg-error-500/15 dark:bg-error-500/15">
+                              <div class="text-2xl font-bold text-error-600 dark:text-error-500">12</div>
+                              <div class="text-xs text-gray-500 dark:text-gray-400">Critical Issues</div>
+                            </div>
+                            <div class="p-3 rounded-lg bg-warning-500/15 dark:bg-warning-500/15">
+                              <div class="text-2xl font-bold text-warning-600 dark:text-warning-500">28</div>
+                              <div class="text-xs text-gray-500 dark:text-gray-400">Warnings</div>
+                            </div>
+                            <div class="p-3 rounded-lg bg-success-500/15 dark:bg-success-500/15">
+                              <div class="text-2xl font-bold text-success-600 dark:text-success-500">156</div>
+                              <div class="text-xs text-gray-500 dark:text-gray-400">Passed Checks</div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <div class="flex justify-between pt-4">
+                        <button @click="step = 1" 
+                                class="inline-flex items-center justify-center rounded-md border border-brand-500 px-6 py-2.5 text-center font-medium text-brand-500 hover:bg-opacity-90 dark:text-brand-400 dark:border-brand-400 dark:hover:bg-gray-700">
+                          New Scan
+                        </button>
+                        <button class="inline-flex items-center justify-center rounded-md bg-brand-500 px-6 py-2.5 text-center font-medium text-white hover:bg-brand-600 dark:hover:bg-brand-400">
+                          View Full Report
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </main>
+            <!-- ===== Main Content End ===== -->
+      
+            <!-- ===== Footer Start ===== -->
+            <footer class="mt-auto">
+              <div class="mx-auto max-w-screen-2xl p-4 md:p-6 2xl:p-10">
+                <div class="flex flex-col md:flex-row md:justify-between">
+                  <div class="text-sm text-gray-500 dark:text-gray-400">
+                    &copy; 2023 Zenith Compliance. All rights reserved.
+                  </div>
+                </div>
+              </div>
+            </footer>
+            <!-- ===== Footer End ===== -->
+          </div>
+          <!-- ===== Content Area End ===== -->
+        </div>
+        <!-- ===== Page Wrapper End ===== -->
+      
+        <!-- ===== Back To Top Start ===== -->
+        <button
+          class="fixed bottom-7 right-7 z-50 flex h-10 w-10 cursor-pointer items-center justify-center rounded-md bg-brand-500 text-white shadow-md transition duration-300 ease-in-out hover:bg-opacity-80 hover:shadow-signUp"
+          @click="window.scrollTo({top: 0, behavior: 'smooth'})"
+          @scroll.window="scrollTop = (window.pageYOffset > 50) ? true : false"
+          :class="{ 'opacity-0': !scrollTop }"
+        >
+          <svg class="fill-current" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M4.41107 12.9393C4.73651 13.2646 5.26414 13.2646 5.58958 12.9393L10.0003 8.52851L14.4111 12.9393C14.7365 13.2646 15.2641 13.2646 15.5896 12.9393C15.915 12.6138 15.915 12.0862 15.5896 11.7607L10.5896 6.76077C10.2641 6.43534 9.73651 6.43534 9.41107 6.76077L4.41107 11.7607C4.08563 12.0862 4.08563 12.6138 4.41107 12.9393Z" fill=""></path>
+          </svg>
+        </button>
+        <!-- ===== Back To Top End ===== -->
+      
+        <script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+      </body>
+      </html>
