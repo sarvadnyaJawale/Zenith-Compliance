@@ -434,7 +434,7 @@
                 <!-- Menu Item Forms -->
                 <li>
                   <a
-                    href="#"
+                    href="{{ url_for('compliance_overview') }}"
                     @click.prevent="selected = (selected === 'Forms' ? '':'Forms')"
                     class="menu-item group"
                     :class=" (selected === 'Forms') || (page === 'formElements' || page === 'formLayout' || page === 'proFormElements' || page === 'proFormLayout') ? 'menu-item-active' : 'menu-item-inactive'"

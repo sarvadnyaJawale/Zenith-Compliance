@@ -124,6 +124,10 @@ def about():
 def cloud_accounts():
     return render_template('Dashboard/cloud-accounts.html')
 
+@app.route('/compliance-overview')
+def compliance_overview():
+    return render_template('Dashboard/compliance-overview.html')
+
 @app.route('/dashboard/add-cloud-account')
 def add_cloud_account():
     return render_template('Dashboard/add-cloud-account.html')
