@@ -140,6 +140,7 @@
     <!-- ===== Page Wrapper Start ===== -->
     <div class="flex h-screen overflow-hidden">
       <!-- ===== Sidebar Start ===== -->
+      <!-- ===== Sidebar Start ===== -->
       <aside
         :class="sidebarToggle ? 'translate-x-0 lg:w-[90px]' : '-translate-x-full'"
         class="sidebar fixed top-0 left-0 z-9999 flex h-screen w-[290px] flex-col overflow-y-auto border-r border-gray-200 bg-white px-5 transition-all duration-300 lg:static lg:translate-x-0 dark:border-gray-800 dark:bg-black"
@@ -211,8 +212,8 @@
                 <!-- Menu Item Dashboard -->
                 <li>
                   <a
-                    href="#"
-                    @click.prevent="selected = (selected === 'Dashboard' ? '':'Dashboard')"
+                    href="{{ url_for('dashboard') }}"
+                    @click="selected = (selected === 'Dashboard' ? '':'Dashboard')"
                     class="menu-item group"
                     :class=" (selected === 'Dashboard') || (page === 'ecommerce' || page === 'analytics' || page === 'marketing' || page === 'crm' || page === 'stocks' || page === 'saas') ? 'menu-item-active' : 'menu-item-inactive'"
                   >
@@ -332,8 +333,8 @@
                 <!-- Menu Item Task -->
                 <li>
                   <a
-                    href="#"
-                    @click.prevent="selected = (selected === 'Task' ? '':'Task')"
+                    href="{{ url_for('dashboard') }}"
+                    @click="selected = (selected === 'Task' ? '':'Task')"
                     class="menu-item group"
                     :class=" (selected === 'Task') || (page === 'taskList' || page === 'taskKanban') ? 'menu-item-active' : 'menu-item-inactive'"
                   >
@@ -435,7 +436,7 @@
                 <li>
                   <a
                     href="{{ url_for('compliance_overview') }}"
-                    @click.prevent="selected = (selected === 'Forms' ? '':'Forms')"
+                    @click="selected = (selected === 'Forms' ? '':'Forms')"
                     class="menu-item group"
                     :class=" (selected === 'Forms') || (page === 'formElements' || page === 'formLayout' || page === 'proFormElements' || page === 'proFormLayout') ? 'menu-item-active' : 'menu-item-inactive'"
                   >
@@ -487,8 +488,8 @@
                 <!-- Menu Item Tables -->
                 <li>
                   <a
-                    href="#"
-                    @click.prevent="selected = (selected === 'Tables' ? '':'Tables')"
+                    href="{{url_for('reports') }}"
+                    @click="selected = (selected === 'Tables' ? '':'Tables')"
                     class="menu-item group"
                     :class="(selected === 'Tables') || (page === 'basicTables' || page === 'dataTables') ? 'menu-item-active' : 'menu-item-inactive'"
                   >
@@ -539,8 +540,8 @@
                 <!-- Menu Item Pages -->
                 <li>
                   <a
-                    href="#"
-                    @click.prevent="selected = (selected === 'Pages' ? '':'Pages')"
+                    href="{{ url_for('settings') }}"
+                    @click="selected = (selected === 'Pages' ? '':'Pages')"
                     class="menu-item group"
                     :class="(selected === 'Pages') || (page === 'fileManager' || page === 'pricingTables' || page === 'blank' || page === 'page404' || page === 'page500' || page === 'page503' || page === 'success' || page === 'faq' || page === 'comingSoon' || page === 'maintenance') ? 'menu-item-active' : 'menu-item-inactive'"
                   >
@@ -764,7 +765,7 @@
                   <!-- Dark Mode Toggler -->
                   <button
                     class="hover:text-dark-900 relative flex h-11 w-11 items-center justify-center rounded-full border border-gray-200 bg-white text-gray-500 transition-colors hover:bg-gray-100 hover:text-gray-700 dark:border-gray-800 dark:bg-gray-900 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-white"
-                    @click.prevent="darkMode = !darkMode"
+                    @click="darkMode = !darkMode"
                   >
                     <svg
                       class="hidden dark:block"
@@ -805,7 +806,7 @@
                   >
                     <button
                       class="hover:text-dark-900 relative flex h-11 w-11 items-center justify-center rounded-full border border-gray-200 bg-white text-gray-500 transition-colors hover:bg-gray-100 hover:text-gray-700 dark:border-gray-800 dark:bg-gray-900 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-white"
-                      @click.prevent="dropdownOpen = ! dropdownOpen; notifying = false"
+                      @click="dropdownOpen = ! dropdownOpen; notifying = false"
                     >
                       <span
                         :class="!notifying ? 'hidden' : 'flex'"
@@ -1261,7 +1262,7 @@
                   <a
                     class="flex items-center text-gray-700 dark:text-gray-400"
                     href="#"
-                    @click.prevent="dropdownOpen = ! dropdownOpen"
+                    @click="dropdownOpen = ! dropdownOpen"
                   >
                     <span class="mr-3 h-11 w-11 overflow-hidden rounded-full">
                       <img src="src/images/user/owner.jpg" alt="User" />

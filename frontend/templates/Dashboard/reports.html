@@ -3,42 +3,111 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Run Compliance Scan - Zenith Compliance</title>
+  <title>Reports - Zenith Compliance</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
   <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
 </head>
-<body class="bg-gray-50 dark:bg-gray-900" 
+<body
   x-data="{ 
-    step: 1, 
-    scanInProgress: false,
-    progress: 0,
-    progressInterval: null,
-    page: 'profile',
+    page: 'reports', 
     'loaded': true, 
     'darkMode': false, 
     'stickyMenu': false, 
     'sidebarToggle': false, 
     'scrollTop': false,
-    selected: 'Profile',
-    startScan() {
-      this.scanInProgress = true;
-      this.progress = 0;
-      this.progressInterval = setInterval(() => {
-        if (this.progress < 100) {
-          this.progress += 1;
-        } else {
-          clearInterval(this.progressInterval);
-          setTimeout(() => {
-            this.scanInProgress = false;
-            this.step = 4;
-          }, 500);
-        }
-      }, 50);
-    }
+    selected: 'Tables',
+    searchQuery: '',
+    filterProvider: 'all',
+    filterFramework: 'all',
+    filterStatus: 'all',
+    sortBy: 'date',
+    sortOrder: 'desc',
+    reports: [
+      { 
+        id: 1, 
+        title: 'SOC2 Compliance - Production', 
+        date: '2023-07-15',
+        provider: 'AWS',
+        framework: 'SOC2',
+        status: 'pass',
+        score: 92,
+        issues: 4
+      },
+      { 
+        id: 2, 
+        title: 'HIPAA Compliance - Healthcare App', 
+        date: '2023-07-10',
+        provider: 'Azure',
+        framework: 'HIPAA',
+        status: 'pass',
+        score: 88,
+        issues: 7
+      },
+      { 
+        id: 3, 
+        title: 'PCI DSS - Payment Gateway', 
+        date: '2023-07-05',
+        provider: 'AWS',
+        framework: 'PCI DSS',
+        status: 'fail',
+        score: 68,
+        issues: 18
+      },
+      { 
+        id: 4, 
+        title: 'ISO 27001 - Core Infrastructure', 
+        date: '2023-06-28',
+        provider: 'GCP',
+        framework: 'ISO 27001',
+        status: 'pass',
+        score: 94,
+        issues: 3
+      },
+      { 
+        id: 5, 
+        title: 'NIST 800-53 - Government Project', 
+        date: '2023-06-22',
+        provider: 'AWS',
+        framework: 'NIST 800-53',
+        status: 'pass',
+        score: 87,
+        issues: 8
+      },
+      { 
+        id: 6, 
+        title: 'GDPR Compliance - EU Services', 
+        date: '2023-06-15',
+        provider: 'Azure',
+        framework: 'GDPR',
+        status: 'fail',
+        score: 72,
+        issues: 14
+      },
+      { 
+        id: 7, 
+        title: 'CIS AWS Benchmarks - Dev Environment', 
+        date: '2023-06-10',
+        provider: 'AWS',
+        framework: 'CIS Benchmarks',
+        status: 'pass',
+        score: 90,
+        issues: 5
+      },
+      { 
+        id: 8, 
+        title: 'CCPA Compliance - Customer Data', 
+        date: '2023-06-05',
+        provider: 'GCP',
+        framework: 'CCPA',
+        status: 'pass',
+        score: 85,
+        issues: 9
+      }
+    ]
   }"
   x-init="
-    darkMode = JSON.parse(localStorage.getItem('darkMode'));
-    $watch('darkMode', value => localStorage.setItem('darkMode', JSON.stringify(value)))"
+       darkMode = JSON.parse(localStorage.getItem('darkMode'));
+       $watch('darkMode', value => localStorage.setItem('darkMode', JSON.stringify(value)))"
   :class="{'dark bg-gray-900': darkMode === true}"
 >
   <!-- ===== Preloader Start ===== -->
@@ -591,7 +660,7 @@
             </div>
 
             <div class="hidden sm:block">
-              <h2 class="text-xl font-semibold text-gray-900 dark:text-white">Run Compliance Scan</h2>
+              <h2 class="text-xl font-semibold text-gray-900 dark:text-white">Reports</h2>
             </div>
           </div>
         </div>
@@ -600,255 +669,338 @@
 
       <!-- ===== Main Content Start ===== -->
       <main class="p-4 md:p-6 2xl:p-10">
-        <div class="mx-auto max-w-3xl">
-          <!-- Page Title -->
-          <div class="mb-6">
-            <h2 class="text-2xl font-semibold text-gray-900 dark:text-white">Run Compliance Scan</h2>
-            <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Scan your cloud infrastructure for compliance issues and security vulnerabilities</p>
+        <!-- Page Title -->
+        <div class="mb-6">
+          <h2 class="text-2xl font-semibold text-gray-900 dark:text-white">Reports</h2>
+          <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">View and download all previously generated compliance reports</p>
+        </div>
+
+        <!-- Controls Section -->
+        <div class="mb-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+          <!-- Search and Filters -->
+          <div class="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
+            <div class="relative w-full sm:w-64">
+              <input 
+                type="text" 
+                x-model="searchQuery"
+                placeholder="Search reports..." 
+                class="w-full rounded border-gray-300 bg-transparent px-4 py-2.5 pl-11 font-medium outline-none transition focus:border-brand-500 active:border-brand-500 disabled:cursor-default disabled:bg-whiter dark:border-gray-700 dark:bg-gray-800 dark:focus:border-brand-500"
+              >
+              <span class="absolute left-4 top-3 text-gray-500 dark:text-gray-400">
+                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                </svg>
+              </span>
+            </div>
+            <div class="flex gap-2 flex-wrap sm:flex-nowrap">
+              <select 
+                x-model="filterProvider"
+                class="rounded border-gray-300 bg-transparent px-4 py-2.5 font-medium outline-none transition focus:border-brand-500 active:border-brand-500 disabled:cursor-default disabled:bg-whiter dark:border-gray-700 dark:bg-gray-800 dark:focus:border-brand-500"
+              >
+                <option value="all">All Providers</option>
+                <option value="AWS">AWS</option>
+                <option value="Azure">Azure</option>
+                <option value="GCP">GCP</option>
+              </select>
+              <select 
+                x-model="filterFramework"
+                class="rounded border-gray-300 bg-transparent px-4 py-2.5 font-medium outline-none transition focus:border-brand-500 active:border-brand-500 disabled:cursor-default disabled:bg-whiter dark:border-gray-700 dark:bg-gray-800 dark:focus:border-brand-500"
+              >
+                <option value="all">All Frameworks</option>
+                <option value="SOC2">SOC2</option>
+                <option value="HIPAA">HIPAA</option>
+                <option value="PCI DSS">PCI DSS</option>
+                <option value="ISO 27001">ISO 27001</option>
+                <option value="NIST 800-53">NIST 800-53</option>
+                <option value="GDPR">GDPR</option>
+                <option value="CIS Benchmarks">CIS Benchmarks</option>
+                <option value="CCPA">CCPA</option>
+              </select>
+              <select 
+                x-model="filterStatus"
+                class="rounded border-gray-300 bg-transparent px-4 py-2.5 font-medium outline-none transition focus:border-brand-500 active:border-brand-500 disabled:cursor-default disabled:bg-whiter dark:border-gray-700 dark:bg-gray-800 dark:focus:border-brand-500"
+              >
+                <option value="all">All Status</option>
+                <option value="pass">Pass</option>
+                <option value="fail">Fail</option>
+              </select>
+            </div>
           </div>
 
-          <!-- Scan Setup Card -->
-          <div class="rounded-lg border border-gray-200 bg-white shadow-default dark:border-gray-700 dark:bg-gray-800">
-            <div class="border-b border-gray-200 px-6 py-4 dark:border-gray-700">
-              <h3 class="font-medium text-gray-900 dark:text-white">
-                <span x-show="step === 1">Step 1: Select Environment</span>
-                <span x-show="step === 2">Step 2: Configure Scan</span>
-                <span x-show="step === 3">Step 3: Running Scan</span>
-                <span x-show="step === 4">Scan Complete</span>
-              </h3>
-            </div>
-            
-            <div class="p-6">
-              <!-- Progress Steps -->
-              <div class="mb-8">
-                <div class="flex items-center justify-between">
-                  <div class="flex flex-col items-center">
-                    <div class="flex h-8 w-8 items-center justify-center rounded-full" 
-                         :class="step >= 1 ? 'bg-brand-500 text-white' : 'bg-gray-200 dark:bg-gray-700'">1</div>
-                    <span class="mt-2 text-xs text-gray-500 dark:text-gray-400">Environment</span>
-                  </div>
-                  <div class="flex-1 h-1 mx-2" :class="step > 1 ? 'bg-brand-500' : 'bg-gray-200 dark:bg-gray-700'"></div>
-                  <div class="flex flex-col items-center">
-                    <div class="flex h-8 w-8 items-center justify-center rounded-full" 
-                         :class="step >= 2 ? 'bg-brand-500 text-white' : 'bg-gray-200 dark:bg-gray-700'">2</div>
-                    <span class="mt-2 text-xs text-gray-500 dark:text-gray-400">Configure</span>
-                  </div>
-                  <div class="flex-1 h-1 mx-2" :class="step > 2 ? 'bg-brand-500' : 'bg-gray-200 dark:bg-gray-700'"></div>
-                  <div class="flex flex-col items-center">
-                    <div class="flex h-8 w-8 items-center justify-center rounded-full" 
-                         :class="step >= 3 ? 'bg-brand-500 text-white' : 'bg-gray-200 dark:bg-gray-700'">3</div>
-                    <span class="mt-2 text-xs text-gray-500 dark:text-gray-400">Scan</span>
-                  </div>
-                  <div class="flex-1 h-1 mx-2" :class="step > 3 ? 'bg-brand-500' : 'bg-gray-200 dark:bg-gray-700'"></div>
-                  <div class="flex flex-col items-center">
-                    <div class="flex h-8 w-8 items-center justify-center rounded-full" 
-                         :class="step >= 4 ? 'bg-brand-500 text-white' : 'bg-gray-200 dark:bg-gray-700'">4</div>
-                         <span class="mt-2 text-xs text-gray-500 dark:text-gray-400">Results</span>
-                        </div>
-                      </div>
-                    </div>
-      
-                    <!-- Step 1: Environment Selection -->
-                    <div x-show="step === 1" class="space-y-6">
-                      <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">Select the cloud environment you want to scan:</p>
-                      
-                      <div class="grid grid-cols-1 gap-4">
-                        <button @click="step = 2" 
-                                class="flex items-center p-4 border border-gray-200 rounded-lg hover:border-brand-500 hover:bg-gray-50 dark:border-gray-700 dark:hover:border-brand-500 dark:bg-gray-800 dark:hover:bg-gray-700 transition-all">
-                          <div class="w-10 h-10 mr-3 flex items-center justify-center bg-brand-500/15 rounded-lg">
-                            <svg class="w-6 h-6 text-brand-500" fill="currentColor" viewBox="0 0 24 24">
-                              <path d="M18.75 11.25H15a.75.75 0 0 1-.75-.75V7.5A.75.75 0 0 1 15 6.75h3.75a.75.75 0 0 1 .75.75v3a.75.75 0 0 1-.75.75zm-10.5 0H4.5a.75.75 0 0 1-.75-.75v-3A.75.75 0 0 1 4.5 6.75h3.75a.75.75 0 0 1 .75.75v3a.75.75 0 0 1-.75.75zm0 6.75H4.5a.75.75 0 0 1-.75-.75v-3a.75.75 0 0 1 .75-.75h3.75a.75.75 0 0 1 .75.75v3a.75.75 0 0 1-.75.75zm10.5 0H15a.75.75 0 0 1-.75-.75v-3a.75.75 0 0 1 .75-.75h3.75a.75.75 0 0 1 .75.75v3a.75.75 0 0 1-.75.75z"/>
-                            </svg>
-                          </div>
-                          <div class="text-left">
-                            <h4 class="font-medium text-gray-900 dark:text-white">AWS</h4>
-                            <p class="text-xs text-gray-500 dark:text-gray-400">Amazon Web Services</p>
-                          </div>
-                        </button>
-                      </div>
-                    </div>
-      
-                    <!-- Step 2: Configure Scan -->
-                    <div x-show="step === 2" class="space-y-6">
-                      <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">Configure your compliance scan settings:</p>
-                      
-                      <div class="space-y-4">
-                        <div>
-                          <label class="mb-2.5 block font-medium text-gray-900 dark:text-white">Compliance Frameworks</label>
-                          <div class="space-y-2">
-                            <label class="flex items-center">
-                              <input type="checkbox" class="form-checkbox rounded text-brand-500 border-gray-300 focus:ring-brand-500 dark:border-gray-700 dark:bg-gray-800 dark:focus:ring-brand-500" checked>
-                              <span class="ml-2 text-sm text-gray-700 dark:text-gray-300">CIS Benchmarks</span>
-                            </label>
-                            <label class="flex items-center">
-                              <input type="checkbox" class="form-checkbox rounded text-brand-500 border-gray-300 focus:ring-brand-500 dark:border-gray-700 dark:bg-gray-800 dark:focus:ring-brand-500" checked>
-                              <span class="ml-2 text-sm text-gray-700 dark:text-gray-300">NIST 800-53</span>
-                            </label>
-                            <label class="flex items-center">
-                              <input type="checkbox" class="form-checkbox rounded text-brand-500 border-gray-300 focus:ring-brand-500 dark:border-gray-700 dark:bg-gray-800 dark:focus:ring-brand-500">
-                              <span class="ml-2 text-sm text-gray-700 dark:text-gray-300">HIPAA</span>
-                            </label>
-                            <label class="flex items-center">
-                              <input type="checkbox" class="form-checkbox rounded text-brand-500 border-gray-300 focus:ring-brand-500 dark:border-gray-700 dark:bg-gray-800 dark:focus:ring-brand-500">
-                              <span class="ml-2 text-sm text-gray-700 dark:text-gray-300">PCI DSS</span>
-                            </label>
-                            <label class="flex items-center">
-                              <input type="checkbox" class="form-checkbox rounded text-brand-500 border-gray-300 focus:ring-brand-500 dark:border-gray-700 dark:bg-gray-800 dark:focus:ring-brand-500">
-                              <span class="ml-2 text-sm text-gray-700 dark:text-gray-300">SOC 2</span>
-                            </label>
-                          </div>
-                        </div>
-                        
-                        <div>
-                          <label class="mb-2.5 block font-medium text-gray-900 dark:text-white">Scan Depth</label>
-                          <select class="w-full rounded border-gray-300 bg-transparent px-5 py-3 font-medium outline-none transition focus:border-brand-500 active:border-brand-500 disabled:cursor-default disabled:bg-whiter dark:border-gray-700 dark:bg-gray-800 dark:focus:border-brand-500">
-                            <option value="quick">Quick Scan (5-10 minutes)</option>
-                            <option value="standard" selected>Standard Scan (15-30 minutes)</option>
-                            <option value="deep">Deep Scan (30+ minutes)</option>
-                          </select>
-                        </div>
-                        
-                        <div>
-                          <label class="mb-2.5 block font-medium text-gray-900 dark:text-white">Scan Schedule</label>
-                          <select class="w-full rounded border-gray-300 bg-transparent px-5 py-3 font-medium outline-none transition focus:border-brand-500 active:border-brand-500 disabled:cursor-default disabled:bg-whiter dark:border-gray-700 dark:bg-gray-800 dark:focus:border-brand-500">
-                            <option value="once" selected>Run Once</option>
-                            <option value="daily">Daily</option>
-                            <option value="weekly">Weekly</option>
-                            <option value="monthly">Monthly</option>
-                          </select>
-                        </div>
-                      </div>
-                      
-                      <div class="flex justify-between pt-4">
-                        <button @click="step = 1" 
-                                class="inline-flex items-center justify-center rounded-md border border-brand-500 px-6 py-2.5 text-center font-medium text-brand-500 hover:bg-opacity-90 dark:text-brand-400 dark:border-brand-400 dark:hover:bg-gray-700">
-                          Back
-                        </button>
-                        <button @click="step = 3; startScan()" 
-                                class="inline-flex items-center justify-center rounded-md bg-brand-500 px-6 py-2.5 text-center font-medium text-white hover:bg-brand-600 dark:hover:bg-brand-400">
-                          Start Scan
-                        </button>
-                      </div>
-                    </div>
-      
-                    <!-- Step 3: Running Scan -->
-                    <div x-show="step === 3" class="space-y-6">
-                      <div class="text-center py-6">
-                        <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-brand-500/15 mb-4">
-                          <svg class="w-8 h-8 text-brand-500 animate-spin" fill="none" viewBox="0 0 24 24">
-                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                          </svg>
-                        </div>
-                        <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-2">Scanning AWS Environment</h3>
-                        <p class="text-sm text-gray-500 dark:text-gray-400">This may take a few minutes. Please don't close this window.</p>
-                      </div>
-                      
-                      <div class="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
-                        <div class="bg-brand-500 h-2.5 rounded-full transition-all duration-300" :style="`width: ${progress}%`"></div>
-                      </div>
-                      
-                      <div class="flex justify-between text-sm text-gray-500 dark:text-gray-400">
-                        <span>Scanning resources...</span>
-                        <span x-text="`${progress}%`"></span>
-                      </div>
-                      
-                      <div class="mt-4 border border-gray-200 rounded-lg p-4 bg-gray-50 dark:border-gray-700 dark:bg-gray-800 max-h-40 overflow-y-auto">
-                        <div class="text-xs font-mono space-y-1 text-gray-700 dark:text-gray-300">
-                          <div>Initializing scan...</div>
-                          <div x-show="progress >= 10">Connecting to AWS API...</div>
-                          <div x-show="progress >= 20">Authentication successful</div>
-                          <div x-show="progress >= 30">Discovering resources...</div>
-                          <div x-show="progress >= 40">Analyzing EC2 instances...</div>
-                          <div x-show="progress >= 50">Checking VPC configurations...</div>
-                          <div x-show="progress >= 60">Analyzing IAM policies...</div>
-                          <div x-show="progress >= 70">Checking S3 bucket configurations...</div>
-                          <div x-show="progress >= 80">Validating KMS encryption settings...</div>
-                          <div x-show="progress >= 90">Analyzing CloudTrail and CloudWatch...</div>
-                          <div x-show="progress >= 100">Scan complete! Generating report...</div>
-                        </div>
-                      </div>
-                    </div>
-      
-                    <!-- Step 4: Scan Complete -->
-                    <div x-show="step === 4" class="space-y-6">
-                      <div class="text-center py-6">
-                        <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-success-500/15 mb-4">
-                          <svg class="w-8 h-8 text-success-500" fill="currentColor" viewBox="0 0 20 20">
-                            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
-                          </svg>
-                        </div>
-                        <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-2">Scan Complete!</h3>
-                        <p class="text-sm text-gray-500 dark:text-gray-400">Your compliance scan has been completed successfully.</p>
-                      </div>
-                      
-                      <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
-                        <div class="p-4 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-700">
-                          <h4 class="font-medium text-gray-900 dark:text-white">Scan Summary</h4>
-                        </div>
-                        <div class="p-4">
-                          <div class="grid grid-cols-3 gap-4 text-center">
-                            <div class="p-3 rounded-lg bg-error-500/15 dark:bg-error-500/15">
-                              <div class="text-2xl font-bold text-error-600 dark:text-error-500">12</div>
-                              <div class="text-xs text-gray-500 dark:text-gray-400">Critical Issues</div>
-                            </div>
-                            <div class="p-3 rounded-lg bg-warning-500/15 dark:bg-warning-500/15">
-                              <div class="text-2xl font-bold text-warning-600 dark:text-warning-500">28</div>
-                              <div class="text-xs text-gray-500 dark:text-gray-400">Warnings</div>
-                            </div>
-                            <div class="p-3 rounded-lg bg-success-500/15 dark:bg-success-500/15">
-                              <div class="text-2xl font-bold text-success-600 dark:text-success-500">156</div>
-                              <div class="text-xs text-gray-500 dark:text-gray-400">Passed Checks</div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                      
-                      <div class="flex justify-between pt-4">
-                        <button @click="step = 1" 
-                                class="inline-flex items-center justify-center rounded-md border border-brand-500 px-6 py-2.5 text-center font-medium text-brand-500 hover:bg-opacity-90 dark:text-brand-400 dark:border-brand-400 dark:hover:bg-gray-700">
-                          New Scan
-                        </button>
-                        <button class="inline-flex items-center justify-center rounded-md bg-brand-500 px-6 py-2.5 text-center font-medium text-white hover:bg-brand-600 dark:hover:bg-brand-400">
-                          View Full Report
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </main>
-            <!-- ===== Main Content End ===== -->
-      
-            <!-- ===== Footer Start ===== -->
-            <footer class="mt-auto">
-              <div class="mx-auto max-w-screen-2xl p-4 md:p-6 2xl:p-10">
-                <div class="flex flex-col md:flex-row md:justify-between">
-                  <div class="text-sm text-gray-500 dark:text-gray-400">
-                    &copy; 2023 Zenith Compliance. All rights reserved.
-                  </div>
-                </div>
-              </div>
-            </footer>
-            <!-- ===== Footer End ===== -->
+          <!-- Sort Options -->
+          <div class="flex gap-2">
+            <select 
+              x-model="sortBy"
+              class="rounded border-gray-300 bg-transparent px-4 py-2.5 font-medium outline-none transition focus:border-brand-500 active:border-brand-500 disabled:cursor-default disabled:bg-whiter dark:border-gray-700 dark:bg-gray-800 dark:focus:border-brand-500"
+            >
+              <option value="date">Sort by Date</option>
+              <option value="title">Sort by Title</option>
+              <option value="framework">Sort by Framework</option>
+              <option value="score">Sort by Score</option>
+            </select>
+            <button 
+              @click="sortOrder = sortOrder === 'asc' ? 'desc' : 'asc'"
+              class="flex items-center justify-center rounded border border-gray-300 bg-transparent p-2.5 text-gray-500 outline-none transition hover:border-brand-500 hover:text-brand-500 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:border-brand-500 dark:hover:text-brand-500"
+            >
+              <svg 
+                class="h-4 w-4" 
+                :class="sortOrder === 'asc' ? '' : 'rotate-180'"
+                fill="none" 
+                stroke="currentColor" 
+                viewBox="0 0 24 24" 
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path>
+              </svg>
+            </button>
           </div>
-          <!-- ===== Content Area End ===== -->
         </div>
-        <!-- ===== Page Wrapper End ===== -->
-      
-        <!-- ===== Back To Top Start ===== -->
-        <button
-          class="fixed bottom-7 right-7 z-50 flex h-10 w-10 cursor-pointer items-center justify-center rounded-md bg-brand-500 text-white shadow-md transition duration-300 ease-in-out hover:bg-opacity-80 hover:shadow-signUp"
-          @click="window.scrollTo({top: 0, behavior: 'smooth'})"
-          @scroll.window="scrollTop = (window.pageYOffset > 50) ? true : false"
-          :class="{ 'opacity-0': !scrollTop }"
+
+        <!-- Reports Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          <template x-for="report in reports.filter(r => {
+            return (searchQuery === '' || r.title.toLowerCase().includes(searchQuery.toLowerCase())) &&
+                  (filterProvider === 'all' || r.provider === filterProvider) &&
+                  (filterFramework === 'all' || r.framework === filterFramework) &&
+                  (filterStatus === 'all' || r.status === filterStatus);
+          }).sort((a, b) => {
+            if (sortBy === 'date') {
+              return sortOrder === 'asc' ? new Date(a.date) - new Date(b.date) : new Date(b.date) - new Date(a.date);
+            } else if (sortBy === 'title') {
+              return sortOrder === 'asc' ? a.title.localeCompare(b.title) : b.title.localeCompare(a.title);
+            } else if (sortBy === 'framework') {
+              return sortOrder === 'asc' ? a.framework.localeCompare(b.framework) : b.framework.localeCompare(a.framework);
+            } else if (sortBy === 'score') {
+              return sortOrder === 'asc' ? a.score - b.score : b.score - a.score;
+            }
+          })" :key="report.id">
+            <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden hover:shadow-md transition-all duration-300 transform hover:-translate-y-1">
+              <!-- Card Header -->
+              <div class="p-4 border-b border-gray-200 dark:border-gray-700">
+                <div class="flex justify-between items-start">
+                  <div>
+                    <h3 class="font-medium text-gray-900 dark:text-white" x-text="report.title"></h3>
+                    <div class="flex items-center mt-1">
+                      <span class="text-xs text-gray-500 dark:text-gray-400" x-text="new Date(report.date).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })"></span>
+                      <span class="mx-2 text-gray-300 dark:text-gray-600">•</span>
+                      <span class="text-xs text-gray-500 dark:text-gray-400" x-text="report.provider"></span>
+                    </div>
+                  </div>
+                  <div>
+                    <span 
+                      class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium"
+                      :class="{
+                        'bg-success-100 text-success-800 dark:bg-success-900 dark:text-success-300': report.status === 'pass',
+                        'bg-error-100 text-error-800 dark:bg-error-900 dark:text-error-300': report.status === 'fail'
+                      }"
+                    >
+                      <span 
+                        class="w-2 h-2 mr-1 rounded-full"
+                        :class="{
+                          'bg-success-500': report.status === 'pass',
+                          'bg-error-500': report.status === 'fail'
+                        }"
+                      ></span>
+                      <span x-text="report.status === 'pass' ? 'Pass' : 'Fail'"></span>
+                    </span>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- Card Body -->
+              <div class="p-4">
+                <!-- Framework Badge -->
+                <div class="mb-3">
+                  <span 
+                    class="inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-medium bg-brand-100 text-brand-800 dark:bg-brand-900 dark:text-brand-300"
+                    x-text="report.framework"
+                  ></span>
+                </div>
+                
+                <!-- Score -->
+                <div class="mb-4">
+                  <div class="flex justify-between items-center mb-1">
+                    <span class="text-sm text-gray-700 dark:text-gray-300">Compliance Score</span>
+                    <span 
+                      class="text-sm font-medium"
+                      :class="{
+                        'text-success-600 dark:text-success-500': report.score >= 80,
+                        'text-warning-600 dark:text-warning-500': report.score >= 60 && report.score < 80,
+                        'text-error-600 dark:text-error-500': report.score < 60
+                      }"
+                      x-text="report.score + '%'"
+                    ></span>
+                  </div>
+                  <div class="w-full bg-gray-200 rounded-full h-2 dark:bg-gray-700">
+                    <div 
+                      class="h-2 rounded-full transition-all duration-500 ease-in-out" 
+                      :class="{
+                        'bg-success-500': report.score >= 80,
+                        'bg-warning-500': report.score >= 60 && report.score < 80,
+                        'bg-error-500': report.score < 60
+                      }"
+                      :style="`width: ${report.score}%`"
+                    ></div>
+                  </div>
+                </div>
+                
+                <!-- Issues -->
+                <div class="mb-4">
+                  <div class="flex justify-between items-center">
+                    <span class="text-sm text-gray-700 dark:text-gray-300">Issues Found</span>
+                    <span class="text-sm font-medium text-gray-900 dark:text-white" x-text="report.issues"></span>
+                  </div>
+                </div>
+                
+                <!-- Actions -->
+                <div class="flex flex-col gap-2">
+                  <div class="flex justify-between">
+                    <a href="#" class="text-sm text-brand-500 hover:text-brand-600 dark:text-brand-400 dark:hover:text-brand-300 font-medium transition-colors duration-200">
+                      View Details
+                    </a>
+                    <div class="flex gap-2">
+                      <button class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300 transition-colors duration-200">
+                        <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                        </svg>
+                      </button>
+                      <button class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300 transition-colors duration-200">
+                        <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+                        </svg>
+                      </button>
+                    </div>
+                  </div>
+                  <div class="flex gap-2">
+                    <button class="w-1/2 inline-flex items-center justify-center rounded-md border border-gray-300 px-3 py-1.5 text-center text-sm font-medium text-gray-700 hover:bg-gray-100 dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-700 transition-colors duration-200">
+                      <svg class="h-4 w-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+                      </svg>
+                      PDF
+                    </button>
+                    <button class="w-1/2 inline-flex items-center justify-center rounded-md border border-gray-300 px-3 py-1.5 text-center text-sm font-medium text-gray-700 hover:bg-gray-100 dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-700 transition-colors duration-200">
+                      <svg class="h-4 w-4 mr-1" fill="none" stroke="currentColor" viewBox
+
+                      <svg class="h-4 w-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"></path>
+                      </svg>
+                      Excel
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </template>
+        </div>
+
+        <!-- Empty State (shown when no results match filters) -->
+        <div 
+          x-show="reports.filter(r => {
+            return (searchQuery === '' || r.title.toLowerCase().includes(searchQuery.toLowerCase())) &&
+                  (filterProvider === 'all' || r.provider === filterProvider) &&
+                  (filterFramework === 'all' || r.framework === filterFramework) &&
+                  (filterStatus === 'all' || r.status === filterStatus);
+          }).length === 0"
+          class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-8 text-center mt-6"
         >
-          <svg class="fill-current" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path fill-rule="evenodd" clip-rule="evenodd" d="M4.41107 12.9393C4.73651 13.2646 5.26414 13.2646 5.58958 12.9393L10.0003 8.52851L14.4111 12.9393C14.7365 13.2646 15.2641 13.2646 15.5896 12.9393C15.915 12.6138 15.915 12.0862 15.5896 11.7607L10.5896 6.76077C10.2641 6.43534 9.73651 6.43534 9.41107 6.76077L4.41107 11.7607C4.08563 12.0862 4.08563 12.6138 4.41107 12.9393Z" fill=""></path>
+          <svg class="h-12 w-12 mx-auto text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
           </svg>
-        </button>
-        <!-- ===== Back To Top End ===== -->
-      
-        <script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
-      </body>
-      </html>
+          <h3 class="mt-4 text-lg font-medium text-gray-900 dark:text-white">No reports found</h3>
+          <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">We couldn't find any reports matching your search criteria.</p>
+          <div class="mt-4 flex justify-center gap-2">
+            <button 
+              @click="searchQuery = ''; filterProvider = 'all'; filterFramework = 'all'; filterStatus = 'all';"
+              class="inline-flex items-center justify-center rounded-md bg-brand-500 px-4 py-2 text-center font-medium text-white hover:bg-brand-600 dark:hover:bg-brand-400 transition-colors duration-200"
+            >
+              Clear Filters
+            </button>
+            <button 
+              class="inline-flex items-center justify-center rounded-md border border-gray-300 px-4 py-2 text-center font-medium text-gray-700 hover:bg-gray-100 dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-700 transition-colors duration-200"
+            >
+              Run New Scan
+            </button>
+          </div>
+        </div>
+
+        <!-- Pagination -->
+        <div class="flex items-center justify-between mt-6">
+          <div class="flex items-center gap-2">
+            <span class="text-sm text-gray-500 dark:text-gray-400">Showing 1-8 of 8 reports</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <button class="inline-flex items-center justify-center rounded-md border border-gray-300 px-3 py-1.5 text-center text-sm font-medium text-gray-700 hover:bg-gray-100 dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-700 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed" disabled>
+              <svg class="h-4 w-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+              </svg>
+              Previous
+            </button>
+            <button class="inline-flex items-center justify-center rounded-md border border-gray-300 px-3 py-1.5 text-center text-sm font-medium text-gray-700 hover:bg-gray-100 dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-700 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed" disabled>
+              Next
+              <svg class="h-4 w-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+              </svg>
+            </button>
+          </div>
+        </div>
+      </main>
+      <!-- ===== Main Content End ===== -->
+
+      <!-- ===== Footer Start ===== -->
+      <footer class="mt-auto">
+        <div class="mx-auto max-w-screen-2xl p-4 md:p-6 2xl:p-10">
+          <div class="flex flex-col md:flex-row md:justify-between">
+            <div class="text-sm text-gray-500 dark:text-gray-400">
+              &copy; 2023 Zenith Compliance. All rights reserved.
+            </div>
+          </div>
+        </div>
+      </footer>
+      <!-- ===== Footer End ===== -->
+    </div>
+    <!-- ===== Content Area End ===== -->
+  </div>
+  <!-- ===== Page Wrapper End ===== -->
+
+  <!-- ===== Back To Top Start ===== -->
+  <button
+    class="fixed bottom-7 right-7 z-50 flex h-10 w-10 cursor-pointer items-center justify-center rounded-md bg-brand-500 text-white shadow-md transition duration-300 ease-in-out hover:bg-opacity-80 hover:shadow-signUp"
+    @click="window.scrollTo({top: 0, behavior: 'smooth'})"
+    @scroll.window="scrollTop = (window.pageYOffset > 50) ? true : false"
+    :class="{ 'opacity-0': !scrollTop }"
+  >
+    <svg class="fill-current" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path fill-rule="evenodd" clip-rule="evenodd" d="M4.41107 12.9393C4.73651 13.2646 5.26414 13.2646 5.58958 12.9393L10.0003 8.52851L14.4111 12.9393C14.7365 13.2646 15.2641 13.2646 15.5896 12.9393C15.915 12.6138 15.915 12.0862 15.5896 11.7607L10.5896 6.76077C10.2641 6.43534 9.73651 6.43534 9.41107 6.76077L4.41107 11.7607C4.08563 12.0862 4.08563 12.6138 4.41107 12.9393Z" fill=""></path>
+    </svg>
+  </button>
+  <!-- ===== Back To Top End ===== -->
+
+  <script>
+    // Add Alpine.js data for reports
+    document.addEventListener('alpine:init', () => {
+      Alpine.data('reportsData', () => ({
+        searchQuery: '',
+        filterProvider: 'all',
+        filterFramework: 'all',
+        filterStatus: 'all',
+        sortBy: 'date',
+        sortOrder: 'desc',
+        
+        // Animation helpers
+        animateIn(el) {
+          el.style.opacity = '0';
+          el.style.transform = 'translateY(20px)';
+          
+          setTimeout(() => {
+            el.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
+            el.style.opacity = '1';
+            el.style.transform = 'translateY(0)';
+          }, 50);
+        }
+      }));
+    });
+  </script>
+
+  <script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+</body>
+</html>

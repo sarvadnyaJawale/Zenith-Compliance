@@ -209,8 +209,8 @@
                 <!-- Menu Item Dashboard -->
                 <li>
                   <a
-                    href="#"
-                    @click.prevent="selected = (selected === 'Dashboard' ? '':'Dashboard')"
+                    href="{{ url_for('dashboard') }}"
+                    @click="selected = (selected === 'Dashboard' ? '':'Dashboard')"
                     class="menu-item group"
                     :class=" (selected === 'Dashboard') || (page === 'ecommerce' || page === 'analytics' || page === 'marketing' || page === 'crm' || page === 'stocks' || page === 'saas') ? 'menu-item-active' : 'menu-item-inactive'"
                   >
@@ -296,7 +296,7 @@
                 <!-- Menu Item Profile -->
                 <li>
                   <a
-                    href="profile.html"
+                    href="{{ url_for('run_scan') }}"
                     @click="selected = (selected === 'Profile' ? '':'Profile')"
                     class="menu-item group"
                     :class=" (selected === 'Profile') && (page === 'profile') ? 'menu-item-active' : 'menu-item-inactive'"
@@ -330,8 +330,8 @@
                 <!-- Menu Item Task -->
                 <li>
                   <a
-                    href="#"
-                    @click.prevent="selected = (selected === 'Task' ? '':'Task')"
+                    href="{{ url_for('dashboard') }}"
+                    @click="selected = (selected === 'Task' ? '':'Task')"
                     class="menu-item group"
                     :class=" (selected === 'Task') || (page === 'taskList' || page === 'taskKanban') ? 'menu-item-active' : 'menu-item-inactive'"
                   >
@@ -432,8 +432,8 @@
                 <!-- Menu Item Forms -->
                 <li>
                   <a
-                    href="#"
-                    @click.prevent="selected = (selected === 'Forms' ? '':'Forms')"
+                    href="{{ url_for('compliance_overview') }}"
+                    @click="selected = (selected === 'Forms' ? '':'Forms')"
                     class="menu-item group"
                     :class=" (selected === 'Forms') || (page === 'formElements' || page === 'formLayout' || page === 'proFormElements' || page === 'proFormLayout') ? 'menu-item-active' : 'menu-item-inactive'"
                   >
@@ -485,8 +485,8 @@
                 <!-- Menu Item Tables -->
                 <li>
                   <a
-                    href="#"
-                    @click.prevent="selected = (selected === 'Tables' ? '':'Tables')"
+                    href="{{url_for('reports') }}"
+                    @click="selected = (selected === 'Tables' ? '':'Tables')"
                     class="menu-item group"
                     :class="(selected === 'Tables') || (page === 'basicTables' || page === 'dataTables') ? 'menu-item-active' : 'menu-item-inactive'"
                   >
@@ -537,8 +537,8 @@
                 <!-- Menu Item Pages -->
                 <li>
                   <a
-                    href="#"
-                    @click.prevent="selected = (selected === 'Pages' ? '':'Pages')"
+                    href="{{ url_for('settings') }}"
+                    @click="selected = (selected === 'Pages' ? '':'Pages')"
                     class="menu-item group"
                     :class="(selected === 'Pages') || (page === 'fileManager' || page === 'pricingTables' || page === 'blank' || page === 'page404' || page === 'page500' || page === 'page503' || page === 'success' || page === 'faq' || page === 'comingSoon' || page === 'maintenance') ? 'menu-item-active' : 'menu-item-inactive'"
                   >

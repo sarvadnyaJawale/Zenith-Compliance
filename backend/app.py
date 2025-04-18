@@ -124,13 +124,23 @@ def about():
 def cloud_accounts():
     return render_template('Dashboard/cloud-accounts.html')
 
+# Add these routes to your app.py file
 @app.route('/compliance-overview')
 def compliance_overview():
     return render_template('Dashboard/compliance-overview.html')
 
+@app.route('/reports')
+def reports():
+    return render_template('Dashboard/reports.html')
+
 @app.route('/dashboard/add-cloud-account')
 def add_cloud_account():
     return render_template('Dashboard/add-cloud-account.html')
+
+# Remove this duplicate route
+# @app.route('/reports')
+# def reports():
+#     return render_template('Dashboard/reports.html')
 
 @app.route('/dashboard/add-cloud-account', methods=['POST'])
 def add_cloud_account_submit():
@@ -210,6 +220,10 @@ def change_log():
 @app.route('/utility-pages/sign-in')
 def utility_sign_in():
     return render_template('sign-in.html')
+
+@app.route('/settings')
+def settings():
+    return render_template('Dashboard/settings.html')
 
 if __name__ == "__main__":
     app.run(debug=True)

@@ -3,42 +3,24 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Run Compliance Scan - Zenith Compliance</title>
+  <title>Settings - Zenith Compliance</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
   <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
 </head>
-<body class="bg-gray-50 dark:bg-gray-900" 
+<body
   x-data="{ 
-    step: 1, 
-    scanInProgress: false,
-    progress: 0,
-    progressInterval: null,
-    page: 'profile',
+    page: 'settings', 
     'loaded': true, 
     'darkMode': false, 
     'stickyMenu': false, 
     'sidebarToggle': false, 
     'scrollTop': false,
-    selected: 'Profile',
-    startScan() {
-      this.scanInProgress = true;
-      this.progress = 0;
-      this.progressInterval = setInterval(() => {
-        if (this.progress < 100) {
-          this.progress += 1;
-        } else {
-          clearInterval(this.progressInterval);
-          setTimeout(() => {
-            this.scanInProgress = false;
-            this.step = 4;
-          }, 500);
-        }
-      }, 50);
-    }
+    selected: 'Pages',
+    activeTab: 'general'
   }"
   x-init="
-    darkMode = JSON.parse(localStorage.getItem('darkMode'));
-    $watch('darkMode', value => localStorage.setItem('darkMode', JSON.stringify(value)))"
+       darkMode = JSON.parse(localStorage.getItem('darkMode'));
+       $watch('darkMode', value => localStorage.setItem('darkMode', JSON.stringify(value)))"
   :class="{'dark bg-gray-900': darkMode === true}"
 >
   <!-- ===== Preloader Start ===== -->
@@ -510,345 +492,352 @@
   </aside>
     <!-- ===== Sidebar End ===== -->
 
-    <!-- ===== Content Area Start ===== -->
-    <div class="relative flex flex-1 flex-col overflow-x-hidden overflow-y-auto">
-      <!-- Small Device Overlay Start -->
-      <div
-        :class="sidebarToggle ? 'block lg:hidden' : 'hidden'"
-        class="fixed z-9 h-screen w-full bg-gray-900/50"
-      ></div>
-      <!-- Small Device Overlay End -->
+        <!-- ===== Content Area Start ===== -->
+        <div class="relative flex flex-1 flex-col overflow-x-hidden overflow-y-auto">
+          <!-- Small Device Overlay Start -->
+          <div
+            :class="sidebarToggle ? 'block lg:hidden' : 'hidden'"
+            class="fixed z-9 h-screen w-full bg-gray-900/50"
+          ></div>
+          <!-- Small Device Overlay End -->
 
-      <!-- ===== Header Start ===== -->
-      <header
-        x-data="{menuToggle: false}"
-        class="sticky top-0 z-99999 flex w-full border-gray-200 bg-white dark:border-gray-800 dark:bg-gray-900 lg:border-b"
-      >
-        <div class="flex grow flex-col items-center justify-between lg:flex-row lg:px-6">
-          <div class="flex w-full items-center justify-between gap-2 border-b border-gray-200 px-3 py-3 dark:border-gray-800 sm:gap-4 lg:justify-normal lg:border-b-0 lg:px-0 lg:py-4">
-            <!-- Hamburger Toggle BTN -->
-            <button
-              :class="sidebarToggle ? 'lg:bg-transparent dark:lg:bg-transparent bg-gray-100 dark:bg-gray-800' : ''"
-              class="z-99999 flex h-10 w-10 items-center justify-center rounded-lg border-gray-200 text-gray-500 dark:border-gray-800 dark:text-gray-400 lg:h-11 lg:w-11 lg:border"
-              @click.stop="sidebarToggle = !sidebarToggle"
-            >
-              <svg
-                class="hidden fill-current lg:block"
-                width="16"
-                height="12"
-                viewBox="0 0 16 12"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  fill-rule="evenodd"
-                  clip-rule="evenodd"
-                  d="M0.583252 1C0.583252 0.585788 0.919038 0.25 1.33325 0.25H14.6666C15.0808 0.25 15.4166 0.585786 15.4166 1C15.4166 1.41421 15.0808 1.75 14.6666 1.75L1.33325 1.75C0.919038 1.75 0.583252 1.41422 0.583252 1ZM0.583252 11C0.583252 10.5858 0.919038 10.25 1.33325 10.25L14.6666 10.25C15.0808 10.25 15.4166 10.5858 15.4166 11C15.4166 11.4142 15.0808 11.75 14.6666 11.75L1.33325 11.75C0.919038 11.75 0.583252 11.4142 0.583252 11ZM1.33325 5.25C0.919038 5.25 0.583252 5.58579 0.583252 6C0.583252 6.41421 0.919038 6.75 1.33325 6.75L7.99992 6.75C8.41413 6.75 8.74992 6.41421 8.74992 6C8.74992 5.58579 8.41413 5.25 7.99992 5.25L1.33325 5.25Z"
-                  fill=""
-                />
-              </svg>
-            </button>
-            <!-- Hamburger Toggle BTN -->
+          <!-- ===== Main Content Start ===== -->
+          <main>
+            <div class="mx-auto max-w-screen-2xl p-4 md:p-6 2xl:p-10">
+              <div class="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                <h2 class="text-2xl font-bold text-gray-900 dark:text-white">
+                  Settings
+                </h2>
+              </div>
 
-            <div class="flex items-center gap-2 sm:gap-4 lg:hidden">
-              <!-- Dark Mode Toggler -->
-              <button
-                class="z-10 flex h-10 w-10 items-center justify-center rounded-lg text-gray-700 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800"
-                @click="darkMode = !darkMode"
-              >
-                <svg
-                  class="hidden fill-current dark:block"
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    fill-rule="evenodd"
-                    clip-rule="evenodd"
-                    d="M12 20.25C16.5563 20.25 20.25 16.5563 20.25 12C20.25 7.44365 16.5563 3.75 12 3.75C7.44365 3.75 3.75 7.44365 3.75 12C3.75 16.5563 7.44365 20.25 12 20.25ZM12 8C12.4142 8 12.75 8.33579 12.75 8.75V11.25H15.25C15.6642 11.25 16 11.5858 16 12C16 12.4142 15.6642 12.75 15.25 12.75H12.75V15.25C12.75 15.6642 12.4142 16 12 16C11.5858 16 11.25 15.6642 11.25 15.25V12.75H8.75C8.33579 12.75 8 12.4142 8 12C8 11.5858 8.33579 11.25 8.75 11.25H11.25V8.75C11.25 8.33579 11.5858 8 12 8Z"
-                    fill=""
-                  />
-                </svg>
-                <svg
-                  class="fill-current dark:hidden"
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    fill-rule="evenodd"
-                    clip-rule="evenodd"
-                    d="M12 20.25C16.5563 20.25 20.25 16.5563 20.25 12C20.25 7.44365 16.5563 3.75 12 3.75C7.44365 3.75 3.75 7.44365 3.75 12C3.75 16.5563 7.44365 20.25 12 20.25ZM12 8C12.4142 8 12.75 8.33579 12.75 8.75V11.25H15.25C15.6642 11.25 16 11.5858 16 12C16 12.4142 15.6642 12.75 15.25 12.75H12.75V15.25C12.75 15.6642 12.4142 16 12 16C11.5858 16 11.25 15.6642 11.25 15.25V12.75H8.75C8.33579 12.75 8 12.4142 8 12C8 11.5858 8.33579 11.25 8.75 11.25H11.25V8.75C11.25 8.33579 11.5858 8 12 8Z"
-                    fill=""
-                  />
-                </svg>
-              </button>
-              <!-- Dark Mode Toggler -->
-            </div>
+              <!-- Settings Tabs -->
+              <div class="mb-6 border-b border-gray-200 dark:border-gray-700">
+                <ul class="flex flex-wrap -mb-px text-sm font-medium text-center">
+                  <li class="mr-2">
+                    <button @click="activeTab = 'general'" :class="activeTab === 'general' ? 'inline-block p-4 text-brand-500 border-b-2 border-brand-500 rounded-t-lg active dark:text-brand-400 dark:border-brand-400' : 'inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300'">
+                      General
+                    </button>
+                  </li>
+                  <li class="mr-2">
+                    <button @click="activeTab = 'security'" :class="activeTab === 'security' ? 'inline-block p-4 text-brand-500 border-b-2 border-brand-500 rounded-t-lg active dark:text-brand-400 dark:border-brand-400' : 'inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300'">
+                      Security
+                    </button>
+                  </li>
+                  <li class="mr-2">
+                    <button @click="activeTab = 'notifications'" :class="activeTab === 'notifications' ? 'inline-block p-4 text-brand-500 border-b-2 border-brand-500 rounded-t-lg active dark:text-brand-400 dark:border-brand-400' : 'inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300'">
+                      Notifications
+                    </button>
+                  </li>
+                  <li class="mr-2">
+                    <button @click="activeTab = 'api'" :class="activeTab === 'api' ? 'inline-block p-4 text-brand-500 border-b-2 border-brand-500 rounded-t-lg active dark:text-brand-400 dark:border-brand-400' : 'inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300'">
+                      API Keys
+                    </button>
+                  </li>
+                </ul>
+              </div>
 
-            <div class="hidden sm:block">
-              <h2 class="text-xl font-semibold text-gray-900 dark:text-white">Run Compliance Scan</h2>
-            </div>
-          </div>
-        </div>
-      </header>
-      <!-- ===== Header End ===== -->
-
-      <!-- ===== Main Content Start ===== -->
-      <main class="p-4 md:p-6 2xl:p-10">
-        <div class="mx-auto max-w-3xl">
-          <!-- Page Title -->
-          <div class="mb-6">
-            <h2 class="text-2xl font-semibold text-gray-900 dark:text-white">Run Compliance Scan</h2>
-            <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Scan your cloud infrastructure for compliance issues and security vulnerabilities</p>
-          </div>
-
-          <!-- Scan Setup Card -->
-          <div class="rounded-lg border border-gray-200 bg-white shadow-default dark:border-gray-700 dark:bg-gray-800">
-            <div class="border-b border-gray-200 px-6 py-4 dark:border-gray-700">
-              <h3 class="font-medium text-gray-900 dark:text-white">
-                <span x-show="step === 1">Step 1: Select Environment</span>
-                <span x-show="step === 2">Step 2: Configure Scan</span>
-                <span x-show="step === 3">Step 3: Running Scan</span>
-                <span x-show="step === 4">Scan Complete</span>
-              </h3>
-            </div>
-            
-            <div class="p-6">
-              <!-- Progress Steps -->
-              <div class="mb-8">
-                <div class="flex items-center justify-between">
-                  <div class="flex flex-col items-center">
-                    <div class="flex h-8 w-8 items-center justify-center rounded-full" 
-                         :class="step >= 1 ? 'bg-brand-500 text-white' : 'bg-gray-200 dark:bg-gray-700'">1</div>
-                    <span class="mt-2 text-xs text-gray-500 dark:text-gray-400">Environment</span>
+              <!-- General Settings Tab -->
+              <div x-show="activeTab === 'general'" class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+                <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-4">Profile Settings</h3>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                      Full Name
+                    </label>
+                    <input
+                      type="text"
+                      value="John Doe"
+                      class="w-full rounded-lg border border-gray-200 bg-transparent py-3 px-5 text-sm text-gray-700 outline-none focus:border-brand-500 focus:shadow-md dark:border-gray-700 dark:text-gray-300 dark:focus:border-brand-400"
+                    />
                   </div>
-                  <div class="flex-1 h-1 mx-2" :class="step > 1 ? 'bg-brand-500' : 'bg-gray-200 dark:bg-gray-700'"></div>
-                  <div class="flex flex-col items-center">
-                    <div class="flex h-8 w-8 items-center justify-center rounded-full" 
-                         :class="step >= 2 ? 'bg-brand-500 text-white' : 'bg-gray-200 dark:bg-gray-700'">2</div>
-                    <span class="mt-2 text-xs text-gray-500 dark:text-gray-400">Configure</span>
+                  
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                      Email Address
+                    </label>
+                    <input
+                      type="email"
+                      value="john.doe@example.com"
+                      class="w-full rounded-lg border border-gray-200 bg-transparent py-3 px-5 text-sm text-gray-700 outline-none focus:border-brand-500 focus:shadow-md dark:border-gray-700 dark:text-gray-300 dark:focus:border-brand-400"
+                    />
                   </div>
-                  <div class="flex-1 h-1 mx-2" :class="step > 2 ? 'bg-brand-500' : 'bg-gray-200 dark:bg-gray-700'"></div>
-                  <div class="flex flex-col items-center">
-                    <div class="flex h-8 w-8 items-center justify-center rounded-full" 
-                         :class="step >= 3 ? 'bg-brand-500 text-white' : 'bg-gray-200 dark:bg-gray-700'">3</div>
-                    <span class="mt-2 text-xs text-gray-500 dark:text-gray-400">Scan</span>
+                  
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                      Company
+                    </label>
+                    <input
+                      type="text"
+                      value="Acme Inc."
+                      class="w-full rounded-lg border border-gray-200 bg-transparent py-3 px-5 text-sm text-gray-700 outline-none focus:border-brand-500 focus:shadow-md dark:border-gray-700 dark:text-gray-300 dark:focus:border-brand-400"
+                    />
                   </div>
-                  <div class="flex-1 h-1 mx-2" :class="step > 3 ? 'bg-brand-500' : 'bg-gray-200 dark:bg-gray-700'"></div>
-                  <div class="flex flex-col items-center">
-                    <div class="flex h-8 w-8 items-center justify-center rounded-full" 
-                         :class="step >= 4 ? 'bg-brand-500 text-white' : 'bg-gray-200 dark:bg-gray-700'">4</div>
-                         <span class="mt-2 text-xs text-gray-500 dark:text-gray-400">Results</span>
-                        </div>
-                      </div>
+                  
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                      Job Title
+                    </label>
+                    <input
+                      type="text"
+                      value="Security Engineer"
+                      class="w-full rounded-lg border border-gray-200 bg-transparent py-3 px-5 text-sm text-gray-700 outline-none focus:border-brand-500 focus:shadow-md dark:border-gray-700 dark:text-gray-300 dark:focus:border-brand-400"
+                    />
+                  </div>
+                </div>
+                
+                <div class="mt-6">
+                  <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    Theme
+                  </label>
+                  <div class="flex items-center space-x-4">
+                    <label class="inline-flex items-center">
+                      <input type="radio" name="theme" value="light" class="form-radio" :checked="!darkMode" @change="darkMode = false">
+                      <span class="ml-2 text-sm text-gray-700 dark:text-gray-300">Light</span>
+                    </label>
+                    <label class="inline-flex items-center">
+                      <input type="radio" name="theme" value="dark" class="form-radio" :checked="darkMode" @change="darkMode = true">
+                      <span class="ml-2 text-sm text-gray-700 dark:text-gray-300">Dark</span>
+                    </label>
+                    <label class="inline-flex items-center">
+                      <input type="radio" name="theme" value="system" class="form-radio">
+                      <span class="ml-2 text-sm text-gray-700 dark:text-gray-300">System</span>
+                    </label>
+                  </div>
+                </div>
+                
+                <div class="mt-6">
+                  <button class="inline-flex items-center justify-center rounded-md bg-brand-500 px-4 py-2 text-center font-medium text-white hover:bg-brand-600 dark:hover:bg-brand-400">
+                    Save Changes
+                  </button>
+                </div>
+              </div>
+
+              <!-- Security Settings Tab -->
+              <div x-show="activeTab === 'security'" class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+                <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-4">Security Settings</h3>
+                
+                <div class="mb-6">
+                  <h4 class="text-md font-medium text-gray-800 dark:text-gray-200 mb-3">Change Password</h4>
+                  <div class="grid grid-cols-1 gap-4">
+                    <div>
+                      <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                        Current Password
+                      </label>
+                      <input
+                        type="password"
+                        placeholder="Enter current password"
+                        class="w-full rounded-lg border border-gray-200 bg-transparent py-3 px-5 text-sm text-gray-700 outline-none focus:border-brand-500 focus:shadow-md dark:border-gray-700 dark:text-gray-300 dark:focus:border-brand-400"
+                      />
                     </div>
-      
-                    <!-- Step 1: Environment Selection -->
-                    <div x-show="step === 1" class="space-y-6">
-                      <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">Select the cloud environment you want to scan:</p>
-                      
-                      <div class="grid grid-cols-1 gap-4">
-                        <button @click="step = 2" 
-                                class="flex items-center p-4 border border-gray-200 rounded-lg hover:border-brand-500 hover:bg-gray-50 dark:border-gray-700 dark:hover:border-brand-500 dark:bg-gray-800 dark:hover:bg-gray-700 transition-all">
-                          <div class="w-10 h-10 mr-3 flex items-center justify-center bg-brand-500/15 rounded-lg">
-                            <svg class="w-6 h-6 text-brand-500" fill="currentColor" viewBox="0 0 24 24">
-                              <path d="M18.75 11.25H15a.75.75 0 0 1-.75-.75V7.5A.75.75 0 0 1 15 6.75h3.75a.75.75 0 0 1 .75.75v3a.75.75 0 0 1-.75.75zm-10.5 0H4.5a.75.75 0 0 1-.75-.75v-3A.75.75 0 0 1 4.5 6.75h3.75a.75.75 0 0 1 .75.75v3a.75.75 0 0 1-.75.75zm0 6.75H4.5a.75.75 0 0 1-.75-.75v-3a.75.75 0 0 1 .75-.75h3.75a.75.75 0 0 1 .75.75v3a.75.75 0 0 1-.75.75zm10.5 0H15a.75.75 0 0 1-.75-.75v-3a.75.75 0 0 1 .75-.75h3.75a.75.75 0 0 1 .75.75v3a.75.75 0 0 1-.75.75z"/>
-                            </svg>
-                          </div>
-                          <div class="text-left">
-                            <h4 class="font-medium text-gray-900 dark:text-white">AWS</h4>
-                            <p class="text-xs text-gray-500 dark:text-gray-400">Amazon Web Services</p>
-                          </div>
-                        </button>
-                      </div>
+                    
+                    <div>
+                      <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                        New Password
+                      </label>
+                      <input
+                        type="password"
+                        placeholder="Enter new password"
+                        class="w-full rounded-lg border border-gray-200 bg-transparent py-3 px-5 text-sm text-gray-700 outline-none focus:border-brand-500 focus:shadow-md dark:border-gray-700 dark:text-gray-300 dark:focus:border-brand-400"
+                      />
                     </div>
-      
-                    <!-- Step 2: Configure Scan -->
-                    <div x-show="step === 2" class="space-y-6">
-                      <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">Configure your compliance scan settings:</p>
-                      
-                      <div class="space-y-4">
-                        <div>
-                          <label class="mb-2.5 block font-medium text-gray-900 dark:text-white">Compliance Frameworks</label>
-                          <div class="space-y-2">
-                            <label class="flex items-center">
-                              <input type="checkbox" class="form-checkbox rounded text-brand-500 border-gray-300 focus:ring-brand-500 dark:border-gray-700 dark:bg-gray-800 dark:focus:ring-brand-500" checked>
-                              <span class="ml-2 text-sm text-gray-700 dark:text-gray-300">CIS Benchmarks</span>
-                            </label>
-                            <label class="flex items-center">
-                              <input type="checkbox" class="form-checkbox rounded text-brand-500 border-gray-300 focus:ring-brand-500 dark:border-gray-700 dark:bg-gray-800 dark:focus:ring-brand-500" checked>
-                              <span class="ml-2 text-sm text-gray-700 dark:text-gray-300">NIST 800-53</span>
-                            </label>
-                            <label class="flex items-center">
-                              <input type="checkbox" class="form-checkbox rounded text-brand-500 border-gray-300 focus:ring-brand-500 dark:border-gray-700 dark:bg-gray-800 dark:focus:ring-brand-500">
-                              <span class="ml-2 text-sm text-gray-700 dark:text-gray-300">HIPAA</span>
-                            </label>
-                            <label class="flex items-center">
-                              <input type="checkbox" class="form-checkbox rounded text-brand-500 border-gray-300 focus:ring-brand-500 dark:border-gray-700 dark:bg-gray-800 dark:focus:ring-brand-500">
-                              <span class="ml-2 text-sm text-gray-700 dark:text-gray-300">PCI DSS</span>
-                            </label>
-                            <label class="flex items-center">
-                              <input type="checkbox" class="form-checkbox rounded text-brand-500 border-gray-300 focus:ring-brand-500 dark:border-gray-700 dark:bg-gray-800 dark:focus:ring-brand-500">
-                              <span class="ml-2 text-sm text-gray-700 dark:text-gray-300">SOC 2</span>
-                            </label>
-                          </div>
-                        </div>
-                        
-                        <div>
-                          <label class="mb-2.5 block font-medium text-gray-900 dark:text-white">Scan Depth</label>
-                          <select class="w-full rounded border-gray-300 bg-transparent px-5 py-3 font-medium outline-none transition focus:border-brand-500 active:border-brand-500 disabled:cursor-default disabled:bg-whiter dark:border-gray-700 dark:bg-gray-800 dark:focus:border-brand-500">
-                            <option value="quick">Quick Scan (5-10 minutes)</option>
-                            <option value="standard" selected>Standard Scan (15-30 minutes)</option>
-                            <option value="deep">Deep Scan (30+ minutes)</option>
-                          </select>
-                        </div>
-                        
-                        <div>
-                          <label class="mb-2.5 block font-medium text-gray-900 dark:text-white">Scan Schedule</label>
-                          <select class="w-full rounded border-gray-300 bg-transparent px-5 py-3 font-medium outline-none transition focus:border-brand-500 active:border-brand-500 disabled:cursor-default disabled:bg-whiter dark:border-gray-700 dark:bg-gray-800 dark:focus:border-brand-500">
-                            <option value="once" selected>Run Once</option>
-                            <option value="daily">Daily</option>
-                            <option value="weekly">Weekly</option>
-                            <option value="monthly">Monthly</option>
-                          </select>
-                        </div>
-                      </div>
-                      
-                      <div class="flex justify-between pt-4">
-                        <button @click="step = 1" 
-                                class="inline-flex items-center justify-center rounded-md border border-brand-500 px-6 py-2.5 text-center font-medium text-brand-500 hover:bg-opacity-90 dark:text-brand-400 dark:border-brand-400 dark:hover:bg-gray-700">
-                          Back
-                        </button>
-                        <button @click="step = 3; startScan()" 
-                                class="inline-flex items-center justify-center rounded-md bg-brand-500 px-6 py-2.5 text-center font-medium text-white hover:bg-brand-600 dark:hover:bg-brand-400">
-                          Start Scan
-                        </button>
-                      </div>
+                    
+                    <div>
+                      <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                        Confirm New Password
+                      </label>
+                      <input
+                        type="password"
+                        placeholder="Confirm new password"
+                        class="w-full rounded-lg border border-gray-200 bg-transparent py-3 px-5 text-sm text-gray-700 outline-none focus:border-brand-500 focus:shadow-md dark:border-gray-700 dark:text-gray-300 dark:focus:border-brand-400"
+                      />
                     </div>
-      
-                    <!-- Step 3: Running Scan -->
-                    <div x-show="step === 3" class="space-y-6">
-                      <div class="text-center py-6">
-                        <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-brand-500/15 mb-4">
-                          <svg class="w-8 h-8 text-brand-500 animate-spin" fill="none" viewBox="0 0 24 24">
-                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                          </svg>
-                        </div>
-                        <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-2">Scanning AWS Environment</h3>
-                        <p class="text-sm text-gray-500 dark:text-gray-400">This may take a few minutes. Please don't close this window.</p>
-                      </div>
-                      
-                      <div class="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
-                        <div class="bg-brand-500 h-2.5 rounded-full transition-all duration-300" :style="`width: ${progress}%`"></div>
-                      </div>
-                      
-                      <div class="flex justify-between text-sm text-gray-500 dark:text-gray-400">
-                        <span>Scanning resources...</span>
-                        <span x-text="`${progress}%`"></span>
-                      </div>
-                      
-                      <div class="mt-4 border border-gray-200 rounded-lg p-4 bg-gray-50 dark:border-gray-700 dark:bg-gray-800 max-h-40 overflow-y-auto">
-                        <div class="text-xs font-mono space-y-1 text-gray-700 dark:text-gray-300">
-                          <div>Initializing scan...</div>
-                          <div x-show="progress >= 10">Connecting to AWS API...</div>
-                          <div x-show="progress >= 20">Authentication successful</div>
-                          <div x-show="progress >= 30">Discovering resources...</div>
-                          <div x-show="progress >= 40">Analyzing EC2 instances...</div>
-                          <div x-show="progress >= 50">Checking VPC configurations...</div>
-                          <div x-show="progress >= 60">Analyzing IAM policies...</div>
-                          <div x-show="progress >= 70">Checking S3 bucket configurations...</div>
-                          <div x-show="progress >= 80">Validating KMS encryption settings...</div>
-                          <div x-show="progress >= 90">Analyzing CloudTrail and CloudWatch...</div>
-                          <div x-show="progress >= 100">Scan complete! Generating report...</div>
-                        </div>
-                      </div>
+                  </div>
+                  
+                  <div class="mt-4">
+                    <button class="inline-flex items-center justify-center rounded-md bg-brand-500 px-4 py-2 text-center font-medium text-white hover:bg-brand-600 dark:hover:bg-brand-400">
+                      Update Password
+                    </button>
+                  </div>
+                </div>
+                
+                <div class="mt-8">
+                  <h4 class="text-md font-medium text-gray-800 dark:text-gray-200 mb-3">Two-Factor Authentication</h4>
+                  <div class="flex items-center justify-between">
+                    <div>
+                      <p class="text-sm text-gray-600 dark:text-gray-400">Add an extra layer of security to your account</p>
                     </div>
-      
-                    <!-- Step 4: Scan Complete -->
-                    <div x-show="step === 4" class="space-y-6">
-                      <div class="text-center py-6">
-                        <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-success-500/15 mb-4">
-                          <svg class="w-8 h-8 text-success-500" fill="currentColor" viewBox="0 0 20 20">
-                            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
-                          </svg>
-                        </div>
-                        <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-2">Scan Complete!</h3>
-                        <p class="text-sm text-gray-500 dark:text-gray-400">Your compliance scan has been completed successfully.</p>
-                      </div>
-                      
-                      <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
-                        <div class="p-4 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-700">
-                          <h4 class="font-medium text-gray-900 dark:text-white">Scan Summary</h4>
-                        </div>
-                        <div class="p-4">
-                          <div class="grid grid-cols-3 gap-4 text-center">
-                            <div class="p-3 rounded-lg bg-error-500/15 dark:bg-error-500/15">
-                              <div class="text-2xl font-bold text-error-600 dark:text-error-500">12</div>
-                              <div class="text-xs text-gray-500 dark:text-gray-400">Critical Issues</div>
-                            </div>
-                            <div class="p-3 rounded-lg bg-warning-500/15 dark:bg-warning-500/15">
-                              <div class="text-2xl font-bold text-warning-600 dark:text-warning-500">28</div>
-                              <div class="text-xs text-gray-500 dark:text-gray-400">Warnings</div>
-                            </div>
-                            <div class="p-3 rounded-lg bg-success-500/15 dark:bg-success-500/15">
-                              <div class="text-2xl font-bold text-success-600 dark:text-success-500">156</div>
-                              <div class="text-xs text-gray-500 dark:text-gray-400">Passed Checks</div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                      
-                      <div class="flex justify-between pt-4">
-                        <button @click="step = 1" 
-                                class="inline-flex items-center justify-center rounded-md border border-brand-500 px-6 py-2.5 text-center font-medium text-brand-500 hover:bg-opacity-90 dark:text-brand-400 dark:border-brand-400 dark:hover:bg-gray-700">
-                          New Scan
-                        </button>
-                        <button class="inline-flex items-center justify-center rounded-md bg-brand-500 px-6 py-2.5 text-center font-medium text-white hover:bg-brand-600 dark:hover:bg-brand-400">
-                          View Full Report
-                        </button>
-                      </div>
+                    <div class="flex items-center">
+                      <label class="inline-flex items-center cursor-pointer">
+                        <input type="checkbox" value="" class="sr-only peer">
+                        <div class="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-brand-300 dark:peer-focus:ring-brand-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-brand-500"></div>
+                        <span class="ml-3 text-sm font-medium text-gray-700 dark:text-gray-300">Enable</span>
+                      </label>
                     </div>
                   </div>
                 </div>
               </div>
-            </main>
-            <!-- ===== Main Content End ===== -->
-      
-            <!-- ===== Footer Start ===== -->
-            <footer class="mt-auto">
-              <div class="mx-auto max-w-screen-2xl p-4 md:p-6 2xl:p-10">
-                <div class="flex flex-col md:flex-row md:justify-between">
-                  <div class="text-sm text-gray-500 dark:text-gray-400">
-                    &copy; 2023 Zenith Compliance. All rights reserved.
+
+              <!-- Notifications Settings Tab -->
+              <div x-show="activeTab === 'notifications'" class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+                <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-4">Notification Settings</h3>
+                
+                <div class="space-y-4">
+                  <div class="flex items-center justify-between pb-4 border-b border-gray-200 dark:border-gray-700">
+                    <div>
+                      <h4 class="text-md font-medium text-gray-800 dark:text-gray-200">Email Notifications</h4>
+                      <p class="text-sm text-gray-600 dark:text-gray-400">Receive email notifications for important events</p>
+                    </div>
+                    <div class="flex items-center">
+                      <label class="inline-flex items-center cursor-pointer">
+                        <input type="checkbox" value="" class="sr-only peer" checked>
+                        <div class="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-brand-300 dark:peer-focus:ring-brand-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-brand-500"></div>
+                      </label>
+                    </div>
+                  </div>
+                  
+                  <div class="flex items-center justify-between pb-4 border-b border-gray-200 dark:border-gray-700">
+                    <div>
+                      <h4 class="text-md font-medium text-gray-800 dark:text-gray-200">Compliance Alerts</h4>
+                      <p class="text-sm text-gray-600 dark:text-gray-400">Get notified when compliance issues are detected</p>
+                    </div>
+                    <div class="flex items-center">
+                      <label class="inline-flex items-center cursor-pointer">
+                        <input type="checkbox" value="" class="sr-only peer" checked>
+                        <div class="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-brand-300 dark:peer-focus:ring-brand-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-brand-500"></div>
+                      </label>
+                    </div>
+                  </div>
+                  
+                  <div class="flex items-center justify-between pb-4 border-b border-gray-200 dark:border-gray-700">
+                    <div>
+                      <h4 class="text-md font-medium text-gray-800 dark:text-gray-200">Weekly Reports</h4>
+                      <p class="text-sm text-gray-600 dark:text-gray-400">Receive weekly summary reports</p>
+                    </div>
+                    <div class="flex items-center">
+                      <label class="inline-flex items-center cursor-pointer">
+                        <input type="checkbox" value="" class="sr-only peer">
+                        <div class="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-brand-300 dark:peer-focus:ring-brand-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-brand-500"></div>
+                      </label>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="mt-6">
+                  <button class="inline-flex items-center justify-center rounded-md bg-brand-500 px-4 py-2 text-center font-medium text-white hover:bg-brand-600 dark:hover:bg-brand-400">
+                    Save Preferences
+                  </button>
+                </div>
+              </div>
+
+              <!-- API Keys Tab -->
+              <div x-show="activeTab === 'api'" class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+                <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-4">API Keys</h3>
+                
+                <div class="mb-6">
+                  <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">
+                    Generate API keys to integrate with our services. Keep your API keys secure - they have the same permissions as your account.
+                  </p>
+                  
+                  <button class="inline-flex items-center justify-center rounded-md bg-brand-500 px-4 py-2 text-center font-medium text-white hover:bg-brand-600 dark:hover:bg-brand-400">
+                    Generate New API Key
+                  </button>
+                </div>
+                
+                <div class="mt-6">
+                  <h4 class="text-md font-medium text-gray-800 dark:text-gray-200 mb-3">Your API Keys</h4>
+                  
+                  <div class="overflow-x-auto">
+                    <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                      <thead class="bg-gray-50 dark:bg-gray-800">
+                        <tr>
+                          <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider dark:text-gray-400">
+                            Name
+                          </th>
+                          <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider dark:text-gray-400">
+                            Created
+                          </th>
+                          <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider dark:text-gray-400">
+                            Last Used
+                          </th>
+                          <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider dark:text-gray-400">
+                            Actions
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody class="bg-white divide-y divide-gray-200 dark:bg-gray-800 dark:divide-gray-700">
+                        <tr>
+                          <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">
+                            Production API Key
+                          </td>
+                          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+                            Jan 15, 2023
+                          </td>
+                          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+                            Today
+                          </td>
+                          <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                            <button class="text-brand-500 hover:text-brand-600 dark:text-brand-400 dark:hover:text-brand-300">
+                              Revoke
+                            </button>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">
+                            Development API Key
+                          </td>
+                          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+                            Mar 10, 2023
+                          </td>
+                          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+                            2 days ago
+                          </td>
+                          <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                            <button class="text-brand-500 hover:text-brand-600 dark:text-brand-400 dark:hover:text-brand-300">
+                              Revoke
+                            </button>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
                   </div>
                 </div>
               </div>
-            </footer>
-            <!-- ===== Footer End ===== -->
+            </div>
           </div>
-          <!-- ===== Content Area End ===== -->
         </div>
-        <!-- ===== Page Wrapper End ===== -->
-      
-        <!-- ===== Back To Top Start ===== -->
-        <button
-          class="fixed bottom-7 right-7 z-50 flex h-10 w-10 cursor-pointer items-center justify-center rounded-md bg-brand-500 text-white shadow-md transition duration-300 ease-in-out hover:bg-opacity-80 hover:shadow-signUp"
-          @click="window.scrollTo({top: 0, behavior: 'smooth'})"
-          @scroll.window="scrollTop = (window.pageYOffset > 50) ? true : false"
-          :class="{ 'opacity-0': !scrollTop }"
-        >
-          <svg class="fill-current" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path fill-rule="evenodd" clip-rule="evenodd" d="M4.41107 12.9393C4.73651 13.2646 5.26414 13.2646 5.58958 12.9393L10.0003 8.52851L14.4111 12.9393C14.7365 13.2646 15.2641 13.2646 15.5896 12.9393C15.915 12.6138 15.915 12.0862 15.5896 11.7607L10.5896 6.76077C10.2641 6.43534 9.73651 6.43534 9.41107 6.76077L4.41107 11.7607C4.08563 12.0862 4.08563 12.6138 4.41107 12.9393Z" fill=""></path>
-          </svg>
-        </button>
-        <!-- ===== Back To Top End ===== -->
-      
-        <script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
-      </body>
-      </html>
+      </main>
+      <!-- ===== Main Content End ===== -->
+
+      <!-- ===== Footer Start ===== -->
+      <footer class="mt-auto">
+        <div class="mx-auto max-w-screen-2xl p-4 md:p-6 2xl:p-10">
+          <div class="flex flex-col md:flex-row md:justify-between">
+            <div class="text-sm text-gray-500 dark:text-gray-400">
+              &copy; 2023 Zenith Compliance. All rights reserved.
+            </div>
+          </div>
+        </div>
+      </footer>
+      <!-- ===== Footer End ===== -->
+    </div>
+    <!-- ===== Content Area End ===== -->
+  </div>
+  <!-- ===== Page Wrapper End ===== -->
+
+  <!-- ===== Back To Top Start ===== -->
+  <button
+    class="fixed bottom-7 right-7 z-50 flex h-10 w-10 cursor-pointer items-center justify-center rounded-md bg-brand-500 text-white shadow-md transition duration-300 ease-in-out hover:bg-opacity-80 hover:shadow-signUp"
+    @click="window.scrollTo({top: 0, behavior: 'smooth'})"
+    @scroll.window="scrollTop = (window.pageYOffset > 50) ? true : false"
+    :class="{ 'opacity-0': !scrollTop }"
+  >
+    <svg class="fill-current" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path fill-rule="evenodd" clip-rule="evenodd" d="M4.41107 12.9393C4.73651 13.2646 5.26414 13.2646 5.58958 12.9393L10.0003 8.52851L14.4111 12.9393C14.7365 13.2646 15.2641 13.2646 15.5896 12.9393C15.915 12.6138 15.915 12.0862 15.5896 11.7607L10.5896 6.76077C10.2641 6.43534 9.73651 6.43534 9.41107 6.76077L4.41107 11.7607C4.08563 12.0862 4.08563 12.6138 4.41107 12.9393Z" fill=""></path>
+    </svg>
+  </button>
+  <!-- ===== Back To Top End ===== -->
+
+  <script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+</body>
+</html>

@@ -1,0 +1,11 @@
+<!-- In your sidebar.html, make sure you have a link to settings like this -->
+<li>
+  <a
+    href="{{ url_for('settings') }}"
+    class="menu-item group"
+    :class="page === 'settings' ? 'menu-item-active' : 'menu-item-inactive'"
+  >
+    <!-- Icon for settings -->
+    <span class="menu-item-text">Settings</span>
+  </a>
+</li>

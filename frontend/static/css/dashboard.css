@@ -88,6 +88,27 @@
   translate: var(--tw-translate-x) var(--tw-translate-y);
   position: absolute;
 }
+/* Add this new class after the .menu-item-arrow class (around line 90) */
+.menu-item-arrow {
+  top: 50%;
+  right: calc(var(--spacing) * 2.5);
+  --tw-translate-y: calc(calc(1 / 2 * 100%) * -1);
+  translate: var(--tw-translate-x) var(--tw-translate-y);
+  position: absolute;
+}
+
+/* Add this new class */
+.no-dropdown .menu-item-arrow,
+.no-dropdown.menu-item::after {
+  display: none !important;
+}
+
+/* Add this rule to hide all dropdown arrows in the sidebar navigation */
+.menu-item .menu-item-arrow,
+.menu-item::after {
+  display: none !important;
+}
+
 .sr-only {
   clip: rect(0, 0, 0, 0);
   white-space: nowrap;
@@ -4945,6 +4966,13 @@
 .task {
   transition: all 0.2s;
 }
+
+/* Add this rule to hide all dropdown arrows in the sidebar navigation */
+.menu-item .menu-item-arrow,
+.menu-item::after {
+  display: none !important;
+}
+
 .task.is-dragging {
   opacity: 0.8;
   cursor: grabbing;

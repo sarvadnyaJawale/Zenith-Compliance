@@ -116,3 +116,20 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 });
+
+// Look for code that might be adding dropdown arrows dynamically
+// For example, something like:
+
+// If there's a function that adds dropdown arrows to menu items
+// Add a condition to exclude the Reports menu item
+
+// Example modification:
+function addDropdownArrows() {
+  const menuItems = document.querySelectorAll('.menu-item');
+  menuItems.forEach(item => {
+    // Skip adding dropdown arrow to Reports menu item
+    if (!item.closest('a').textContent.trim().includes('Reports')) {
+      // Existing code to add dropdown arrows
+    }
+  });
+}
